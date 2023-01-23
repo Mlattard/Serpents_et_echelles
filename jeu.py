@@ -4,6 +4,8 @@ class Board:
         
         self.rows = rows
         self.columns = columns
+
+        """ testtestetstetstetstesttesttesttestteetsteetsteteest"""
         
     def board_generator(self):
 
