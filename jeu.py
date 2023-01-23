@@ -129,38 +129,53 @@ class Ai(Player):
     
 
 class Startup:
-
-    def __init__():
-
+    def __init__(self):
+        self.board = Board()
         pass
 
-    def menu():
+    def menu(self):
 
-        print("Welcome to the game Portals and Portals")
-        print("Here you have your options")
-        print("1 - Ready the Instructions")
-        print("2 - Play")
-        print("3 - Change the difficulty")
-        print("4 - Exit the game")
-        exit = False
-        while not exit:
+        with open("premise.txt", "r", encoding="utf-8") as premise_game:
+            description = premise_game.read()
+            print(description)
 
-            player_option = int(input(" Please enter your option's choice. 1,2 3 or 4: "))
+        enter_the_game = ("Are you ready to enter? Y/N: ")
 
-            if player_option == 1:
-                pass
-            elif player_option == 2:
-                pass
-            elif player_option == 3:
-                pass
-            elif player_option == 4:
-                pass
-            else: 
-                print("Sorry, this is not one of the options")
+        if enter_the_game == "Y":
+            exit = False
+            while not exit:
+                print("Welcome to Portals and Portals")
+                print("1 - Read the Instructions")
+                print("2 - Play")
+                print("3 - Change the difficulty")
+                print("4 - Exit the game")
+                
+
+                player_option = int(input(" Please enter your option's number. 1,2 3 or 4: "))
+
+                if player_option == 1:
+                    self.instruction()
+                    
+                elif player_option == 2:
+                    pass
+                elif player_option == 3:
+                    pass
+                elif player_option == 4:
+                    print("See you next time!")
+                    exit = True
+                else: 
+                    print("Sorry, this is not one of the options")
+        elif enter_the_game == "N":
+            print("It is ok to be afraid. Feel free to comeback when you find some courage")
+
+
     
     def instruction():
+        with open("instroctions.txt", "r", encoding="utf-8") as rules_game:
+            rules = rules_game.read()
+            print(rules)
         
-        with open 
+        
 
     def play():
         
@@ -174,7 +189,7 @@ class Startup:
         # choix ==2 
         # self.rows sera changé pour 12
         pass
-
+Startup()
 
 # Demarrage
 
