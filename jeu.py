@@ -131,7 +131,9 @@ class Ai(Player):
     
 
 class Startup:
+
     def __init__(self):
+
         self.board = Board()
         pass
 
@@ -152,7 +154,6 @@ class Startup:
                 print("3 - Change the difficulty")
                 print("4 - Exit the game")
                 
-
                 player_option = int(input(" Please enter your option's number. 1,2 3 or 4: "))
 
                 if player_option == 1:
@@ -167,21 +168,20 @@ class Startup:
                     exit = True
                 else: 
                     print("Sorry, this is not one of the options")
+        
         elif enter_the_game == "N":
             print("It is ok to be afraid. Feel free to comeback when you find some courage")
-
-
     
     def instruction():
+
         with open("instroctions.txt", "r", encoding="utf-8") as rules_game:
             rules = rules_game.read()
             print(rules)
         
-        
-
     def play():
         
         #appeler class board (rows = 8, columns = 8, % = 20)
+        print("Je m'appelle Maxime")
         pass
         
     def change_level():
@@ -191,6 +191,7 @@ class Startup:
         # choix ==2 
         # self.rows sera changé pour 12
         pass
+
 Startup()
 
 # Demarrage
