@@ -1,7 +1,3 @@
-# comment implanter le deplacement
-
-
-
 class Board:
     def __init__(self, rows, columns):
         self.rows = rows
@@ -39,7 +35,6 @@ class Tile:
     def win_tile():
         pass
     
-
     def __str__():
         pass
     
@@ -99,6 +94,7 @@ class Player(Tile):
 
     def move_token():
         # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
+        pass
 
 
     def __str__():
