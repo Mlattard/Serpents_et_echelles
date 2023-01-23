@@ -113,12 +113,33 @@ class Startup:
         pass
 
     def menu():
-        #menu
-        pass
+        print("Welcome to the game Portals and Portals")
+        print("Here you have your options")
+        print("1 - Ready the Instructions")
+        print("2 - Play")
+        print("3 - Change the difficulty")
+        print("4 - Exit the game")
+        exit = False
+        while not exit:
+
+            player_option = int(input(" Please enter your option's choice. 1,2 3 or 4: "))
+
+            if player_option == 1:
+                pass
+            elif player_option == 2:
+                pass
+            elif player_option == 3:
+                pass
+            elif player_option == 4:
+                pass
+            else: 
+                print("Sorry, this is not one of the options")
+
+
     
     def instruction():
-        # description texte
-        pass
+        
+        with open 
 
     def play():
         #appeler class board (rows = 8, columns = 8, % = 20)
