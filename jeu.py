@@ -6,55 +6,93 @@ class Board:
     def __str__():
         pass
         
-
     # Disposition des tuiles
     # Disposition des portails    
     # Variété de tableau
+
 class Tile:
     # Obstacles
 
     def __init__():
         pass
 
+    def win():
+    
+
     def __str__():
         pass
     
-class Portail(Tile):
+class Portal(Tile):
     def __init__():
+        # sa representation
         pass
-    def __str__():
-        pass
+    # def what they do
+    
 
     
 class Obstacle(Tile):
     def __init__():
+        # visel/representation graphique
         pass
-    def __str__():
-        pass
+    
     
 
 class Chance(Tile):
     def __init__(): # +/-
         pass
      
-    def __str__():
-        pass
+    
 
     # Afficher le tableau
 
 
 class Player:
     def __init__():
+        # scoreboard
         pass
-    def __str__():
+    def roll_dice():
+        pass
+    def play_card():
         pass
 
+    def move_token():
+        pass
+
+    def __str__():
+        pass
+        
+
+class Ai(Player):
+    # même actions que player, sans input
+
+        pass
+    
 
 class Startup:
     def __init__():
         pass
-    def __str__():
+
+    def menu():
+        #menu
         pass
+    
+    def instruction():
+        # description texte
+        pass
+
+    def play():
+        #appeler class board (rows = 8, columns = 8, % = 20)
+
+        pass
+        
+    def change_level():
+        # menu description difficultée
+        # 
+        # choix ==2 
+        # self.rows sera changé pour 12
+
+        pass
+
 
 # Demarrage
 
