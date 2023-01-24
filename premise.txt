@@ -7,10 +7,27 @@ A world where the journey to the unknown is fraught with danger, and one wrong s
 In this land, you will encounter portals that transport you to different dimensions, 
 and each step you take will bring you closer to your destination, but beware, for the path is uncertain. 
 One moment, you may be in a utopian world, and the next, you could be in a dystopian one. 
-                                # Ca me donne un peu l'impression qu'il va y avoir deux plateaux, j'aime beaucoup l'idée tho !
 
 But fear not, for you are not alone!
 You have the power of the dice on your side, and with each roll, you have the chance to change your fate. 
 So, ready your mind, steady your hand and let the journey begin!
+
+    ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗
+    ║   │   │   │   │   │   │   │   ║   
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢	
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║   │   │   │   │   │   │   │   ║
+    ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    ║ ☺ │   │   │   │   │   │   │   ║
+    ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝
 
 ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼

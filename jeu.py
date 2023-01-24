@@ -1,5 +1,6 @@
 import os
 import random
+from termcolor import colored
 
 class Board:
 
@@ -9,16 +10,68 @@ class Board:
         self.columns = columns
         self.rate = rate
 
+    def __str__(self):
+
+        printed_board = ""
+
+        for row in range(self.board):
+            for tile in range(self.board_generator[row]):
+                if tile < len(self.board[row]):
+                    printed_board += self.board[row][tile]
+                else:
+                    printed_board += self.board[row][tile] + "\n"
+
+        return printed_board
+
     def board_generator(self):
 
         self.board = [] # matrice
-        portals_position = random.sample(range(self.columns), (self.columns * self.rows) * self.rate)
+        # portals_position = random.sample(range(self.columns), (self.columns * self.rows) * self.rate)
 
-        for row in range(0, self.rows): # ou est ce qu'on va avoir besoin de row et tile ?
+        for row in range(0, self.rows):
             line = [] # ligne dans la matrice
             for tile in range(0, self.columns):
-                line.append(Tile())
-            self.board.append(line)
+                if row == 0:
+                    if tile == 0:
+                        line.append("╔")
+                    if tile == self.columns:
+                        line.append("╗")
+                    if tile // 4 == 0:
+                        line.append("╤")
+                    else:
+                        line.append("═══")
+
+                if row == self.rows:
+                    if tile == 0:
+                        line.append("╚")
+                    if tile == self.columns:
+                        line.append("╝")
+                    if tile // 4 == 0:
+                        line.append("╧")
+                    else:
+                        line.append("═══")
+
+                if row // 2 != 0:
+                    if tile == 0:
+                        line.append("╟")
+                    if tile == self.columns:
+                        line.append("╢")
+                    if tile // 4 == 0:
+                        line.append("┼")
+                    else:
+                        line.append("───")
+
+                if row // 2 == 0:
+                    if (tile == 0) or (tile == self.columns):
+                        line.append("║")
+                    if tile // 4 == 0:
+                        line.append("│")
+                    else:
+                        line.append(" ")
+
+                self.board.append(line)
+            
+        print(self.board)
 
         # Board de départ
 
@@ -35,10 +88,19 @@ class Board:
         J'ai peut-etre une idee si on decide à l'avance du nombre de portail par niveau mais c'est un peu brute force.
         On pourrait avoir un dictionnaire de portail {portail_1 = pos1, pos2, portail_2 = pos1, pos2, etc...} '''
 
+        """
+        2 - set random -> create pair
+        3 - si on veut mettre random la case depart (position 1 a 6) SI ON A LE TEMPS
+        trajet en serpentin: verif a faire avc la parité des lignes
+    
+        """
+
     def display_board():
 
+
+
         pass
-        # afficher letat du jeux en cours
+        # afficher l'etat du jeux en cours
         # pertinent?
 
         ''' quoi faire quand les deux joueurs sont sur la même case ? '''
@@ -58,6 +120,9 @@ class Tile:
 
         self.pos_x = pos_x
         self.pos_y = pos_y
+        self.representation = "   "
+
+        # entré et sortie en premier
 
     def check_win():
 
@@ -71,16 +136,35 @@ class Tile:
         
         pass
 
+"""
+first line:
+corner_upper_left = "╔"
+board_upper_wall = "═" *3
+T = "╤"
+corner_upper_right= "╗"
+
+second line:
+
+board_leftside_wall = "║"
+
+repeat 7x
+empty_tile = " "
+middle_wall_vert = "│"
++
+empty_tile = " "
+
+board_right_wall = "║"
+
+"""
+
+
+
 class StartingPoint(Tile):
 
     def __init__(self):
-<<<<<<< Updated upstream
 
         self.pos_x = rows
         self.pos_y = 0
-=======
-        self.
->>>>>>> Stashed changes
 
         # sa representation
         pass
@@ -100,18 +184,45 @@ class ExitPoint(Tile):
 class Portal(Tile):
 
     def __init__(self):
+        # self.next : Portail
+        # self.i = i: int
+        # self.j = j: int
 
         # sa representation
         pass
         # def what they do
-<<<<<<< Updated upstream
+        
+        # idée: quand le joueur passe dans un portail, 
+        # afficher un petit texte de mise en situation comme quoi il a changé d'univers/ il se retrouve dans de contrées inconnus
+        """"
+        portail: si elle est juste un portail, il y a des verif a faire. (verifier que ce n'Est pas une case chance)
+        on peut placer les portails en paire (decider combien on en veut ex. 5% des cases)
+        placer les portails aleatoirement (liste de portails to_set  set_portail)
 
-=======
-# idée: quand le joueur passe dans un portail, 
-# afficher un petit texte de mise en situation comme quoi il a changé d'univers/ il se retrouve dans de contrées inconnus
+        to_set: ex. 5% pos_aleatoire. 
+        index aleatoire(2 index(a,b): set portals next) (i,j) 0... len(to_set)-1, 
+
+        [Portals(i,j),
+         Portals(i,j)
+         ...
+         Portals(i,j)]
+
+        to_set[a].next = to_set[b]
+        to_set[b].next = to_set[a]
+        set.append(to_set[a])
+        set.append(to_set[b])
+        delete de l'Ancienne liste
+    
+        
+        penser a la proportion paire
+        tester si bidirectionnel est fun ou pas (pt implanter certains portails unidirectionnels)
+
+        set_portals: logique: (enlever de tp_set et la mettre dans la liste set_portals quand ils sont definis)
+
+        
+        """""
     
     
->>>>>>> Stashed changes
 class Obstacle(Tile):
 
     def __init__(self):
@@ -123,6 +234,8 @@ class Obstacle(Tile):
 class Chance(Tile):
 
     def __init__(self): # +/-
+        self.lucky_tile = "♣"
+
 
         # sa representation
         pass
@@ -133,6 +246,7 @@ class Chance(Tile):
 class Player(Tile):
 
     def __init__(self):
+        # self = ☺
 
         self.bag = [] # Card
         # part avec une sac vide et ex tombe sur case chance
@@ -206,8 +320,7 @@ class Startup:
             exit = False
             while not exit:
                 self.clear()
-                print("Welcome to Portals and Portals :")
-                print()
+                print(colored("Welcome to Portals and Portals :", "green"))
                 print("1 - Play")
                 print("2 - Read the Instructions")
                 print("3 - Change the difficulty")
@@ -281,8 +394,11 @@ class Startup:
         # choix ==2 
         # self.rows sera changé pour 12
 
-game = Startup()
-game.menu()
+board = Board()
+board.board_generator()
+
+# game = Startup()
+# game.menu()
 
 # Demarrage
 
