@@ -3,8 +3,8 @@ import random
 
 class Board:
 
-    def __init__(self, rows = 8, columns = 8, rate = 20):
-        
+    def __init__(self, rows : int = 8, columns : int = 8, rate : float = 0.2):
+
         self.rows = rows
         self.columns = columns
         self.rate = rate
@@ -12,14 +12,14 @@ class Board:
     def board_generator(self):
 
         self.board = [] # matrice
-        portals_position = random.sample(range(self.columns), (self.columns * self.rows) * 0.2)
-    
+        portals_position = random.sample(range(self.columns), (self.columns * self.rows) * self.rate)
+
         for row in range(0, self.rows): # ou est ce qu'on va avoir besoin de row et tile ?
             line = [] # ligne dans la matrice
             for tile in range(0, self.columns):
                 line.append(Tile())
             self.board.append(line)
-                
+
         # Board de départ
 
         # logique avec random de generateur de tuile, if l'un est tombe du le 20% de chance, l'autre ne peut pas
@@ -33,95 +33,95 @@ class Board:
 
         ''' Comment on peut faire en sorte qu'un portail généré sur une case soit ensuite associé à un autre portail ?
         J'ai peut-etre une idee si on decide à l'avance du nombre de portail par niveau mais c'est un peu brute force.
-        On pourrait avoir un dictionnaire de portail {portail_rouge = pos1, pos2, portail_vert = pos1, pos2, etc...} '''
+        On pourrait avoir un dictionnaire de portail {portail_1 = pos1, pos2, portail_2 = pos1, pos2, etc...} '''
 
     def display_board():
+
+        pass
         # afficher letat du jeux en cours
         # pertinent?
-        pass
 
         ''' quoi faire quand les deux joueurs sont sur la même case ? '''
 
     def __str__():
 
-        pass
-        
-    # Disposition des tuiles
-    # Disposition des portails    
-    # Variété de tableau
-    # déplacements: effets selon les cartes
+        pass  
+        # Disposition des tuiles
+        # Disposition des portails    
+        # Variété de tableau
+        # déplacements: effets selon les cartes
 
 
 class Tile:
-    
+
     def __init__(self, pos_x, pos_y):
-        
+
         self.pos_x = pos_x
         self.pos_y = pos_y
 
     def check_win():
-        
+
         if player.pos_x == sortie.pos_x and player.pos_y == sortie.pos_y:
             print("GAGNÉ !")
 
         if ai.pos_x == sortie.pos_x and ai.pos_y == sortie.pos_y:
             print("PERDU !")
-    
+
     def __str__():
         
         pass
-    
 
 class StartingPoint(Tile):
 
-    def __init__():
+    def __init__(self):
+
+        self.pos_x = rows
+        self.pos_y = 0
 
         # sa representation
         pass
         # def what they do
-
 
 class ExitPoint(Tile):
 
-    def __init__():
+    def __init__(self):
+
+        self.pos_x = 0
+        self.pos_y = columns
 
         # sa representation
         pass
         # def what they do
-
 
 class Portal(Tile):
 
-    def __init__():
+    def __init__(self):
 
         # sa representation
         pass
         # def what they do
-    
-    
+
 class Obstacle(Tile):
-    
-    def __init__():
+
+    def __init__(self):
 
         # visel/representation graphique
         # def what they do
         pass
 
-
 class Chance(Tile):
-    
-    def __init__(): # +/-
-        
+
+    def __init__(self): # +/-
+
         # sa representation
         pass
         # quan d on tombe sur case chance, on ferait self.bag apped item
         # méthode qui fait piger random une carte de la classe carte
         # def what they do 
 
-
 class Player(Tile):
 
-    def __init__(self,):
+    def __init__(self):
 
         self.bag = [] # Card
         # part avec une sac vide et ex tombe sur case chance
@@ -132,21 +132,21 @@ class Player(Tile):
 
         return random.randint(1,6)
         # valeur de deplacement associé selon le lancé de dé.
-       
+
     def play_card():
 
         # prend la valeur de placement et tu +1 ou -1 selon self.bag if les cartes sont dispo dans self.bag
         # if +1 présent. input veux tu faire +1
-        #if -1 présent. input veux tu faire -1
-        #if +1 -1 présent. input veux tuf aire +1 ou -1
+        # if -1 présent. input veux tu faire -1
+        # if +1 -1 présent. input veux tuf aire +1 ou -1
 
-        #prend valeur deplacement et retourne valeur de dep. modifiée
+        # prend valeur deplacement et retourne valeur de dep. modifiée
 
         # quand t'as ta valeur de dep final
         pass
 
     def move_token(self, roll):
-        
+
         self.player_position += roll
         # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
         pass
@@ -155,13 +155,12 @@ class Player(Tile):
 
         pass
         # le player est représenté 
-        
 
 class Ai(Player):
 
     # même actions que player, sans input
-        pass
-    
+    pass
+
 
 class Card:
 
@@ -189,9 +188,9 @@ class Startup:
         with open("premise.txt", "r", encoding="utf-8") as premise_game:
             description = premise_game.read()
             print(f"{description}") 
-        
+
         enter_the_game = input("Are you ready to enter? Y/N: ")
-        
+
         if enter_the_game.lower() == "y": 
             exit = False
             while not exit:
@@ -202,13 +201,13 @@ class Startup:
                 print("2 - Read the Instructions")
                 print("3 - Change the difficulty")
                 print("4 - Exit the game\n")
-                
+
                 player_option = int(input("Please enter your option's number (1, 2, 3 or 4): "))
                 self.clear()
 
                 if player_option == 1:
                     pass
-                    
+
                 elif player_option == 2:
                     self.instructions()
 
@@ -221,12 +220,12 @@ class Startup:
 
                 else: 
                     print("Sorry, this is not one of the options")
-        
+
         elif enter_the_game.lower() == "n":
             self.clear()
             print("\n\n\nIt is ok to be afraid.")
             print("Feel free to comeback when you find some courage.\n\n\n")
-    
+
     @staticmethod
     def instructions():
 
@@ -235,17 +234,17 @@ class Startup:
             with open("instructions.txt", "r", encoding="utf-8") as rules_game:
                 rules = rules_game.read()
                 print(rules)
-            
+
             user_choice = input("Press Enter to go back to menu ")
             if user_choice == "":
                 instructions_exit = True
-        
+
     def play(self):
 
         self.play_game = Board()
-        
+
         pass
-        
+
     def change_level(self):
         exit = False
         while not exit:
@@ -278,5 +277,4 @@ game.menu()
 
 # Affichage du menu: 
 # Niveaux ex: 8x8 avec 20% d'apparition de portail ( le passer a board) 
-# Instructions 
-# 
+# Instructions
