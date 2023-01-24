@@ -1,4 +1,4 @@
-☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼
+☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼
 
 Listen well, traveler, for the rules of this realm are simple yet vital. 
 
@@ -12,11 +12,11 @@ Along the way, you may encounter challenges that will test your resolve.
 To help you do so, you may come across special tiles throughout the game. 
 Upon landing on one of these tiles, you will have the opportunity to collect a "+1 step power" or a "-1 step power". 
 These powers will allow you to move your token one extra space or one less space on your next turn. 
+                                                # Je voyais plus ca comme une carte a jouer a n'importe quel tour
 You can collect only one of each at the same time, so use them wisely, you don’t want to be forced to land on a bad portal!
 
 The first to reach the final portal shall be declared the winner. But remember, the true victory lies in the journey itself. 
 
 Are you ready to embark on this epic adventure? Then let the game begin!
 
-☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼
-
+☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼  ☼
