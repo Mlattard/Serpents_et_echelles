@@ -74,9 +74,13 @@ class Tile:
 class StartingPoint(Tile):
 
     def __init__(self):
+<<<<<<< Updated upstream
 
         self.pos_x = rows
         self.pos_y = 0
+=======
+        self.
+>>>>>>> Stashed changes
 
         # sa representation
         pass
@@ -100,7 +104,14 @@ class Portal(Tile):
         # sa representation
         pass
         # def what they do
+<<<<<<< Updated upstream
 
+=======
+# idée: quand le joueur passe dans un portail, 
+# afficher un petit texte de mise en situation comme quoi il a changé d'univers/ il se retrouve dans de contrées inconnus
+    
+    
+>>>>>>> Stashed changes
 class Obstacle(Tile):
 
     def __init__(self):
