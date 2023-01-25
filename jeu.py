@@ -4,7 +4,7 @@ from termcolor import colored
 
 class Board:
 
-    def __init__(self, rows : int = 8, columns : int = 8, rate : float = 0.2):
+    def __init__(self, rows : int = 8, columns : int = 8, rate : float = 0.05):
 
         self.rows = rows
         self.columns = columns
@@ -14,7 +14,7 @@ class Board:
 
         self.board = []
 
-        """Génération du plateau vide"""
+        """Génération du plateau vide et des cases Départ et Arrivée"""
         for row in range(0, (self.rows * 2) + 1):
             line = []
 
@@ -59,15 +59,17 @@ class Board:
                     elif (row == (self.rows * 2) - 1) and self.columns == 1:
                         line.append(StartingPoint())
                     else:
-                        line.append(" ") 
+                        line.append(Tile()) 
 
             self.board.append(line)
 
-        """Génration des cases départ et arrivée"""
-
-
-
         """Génration des portails"""
+
+        for row in range(1, (self.rows * 2), 2):
+            line = []
+
+            for tile in range(1, (self.columns * 2), 2):  
+                line.append("000")
 
         """Génration des cases chaceuses"""
 
@@ -301,7 +303,7 @@ class Startup:
 
                 if player_option == 1:
                     self.board.display_board()
-                    sortie = input("\nPress Enter to exit: ")
+                    exit = input("\nPress Enter to exit: ")
 
                 elif player_option == 2:
                     self.instructions()
@@ -357,15 +359,10 @@ class Startup:
                 pass
             elif level_choice == 4:
                 exit = True
-
-        # choix ==2 
-        # self.rows sera changé pour 12
-
+# avec generate_board
+# rows : int = 8, columns : int = 8, rate : float = 0.05
+#  rows : int = 12, columns : int = 12, rate : float = 0.1
+#  rows : int = 16, columns : int = 16, rate : float = 0.2 
+        
 game = Startup()
 game.menu()
-
-# Demarrage
-
-# Affichage du menu: 
-# Niveaux ex: 8x8 avec 20% d'apparition de portail ( le passer a board) 
-# Instructions
