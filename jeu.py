@@ -14,6 +14,7 @@ class Board:
 
         self.board = []
 
+        """Génération du plateau vide"""
         for row in range(0, (self.rows * 2) + 1):
             line = []
 
@@ -53,10 +54,22 @@ class Board:
                         line.append("║")
                     elif tile % 2 == 0:
                         line.append("│")
+                    elif row == 1 and (tile == (self.columns * 2) - 1):
+                        line.append(ExitPoint()) 
+                    elif (row == (self.rows * 2) - 1) and self.columns == 1:
+                        line.append(StartingPoint())
                     else:
-                        line.append("   ")
+                        line.append(" ") 
 
             self.board.append(line)
+
+        """Génration des cases départ et arrivée"""
+
+
+
+        """Génration des portails"""
+
+        """Génration des cases chaceuses"""
 
         # Board de départ
 
