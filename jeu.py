@@ -55,17 +55,17 @@ class Board:
                     elif tile % 2 == 0:
                         line.append("│")
                     elif row == 1 and (tile == (self.columns * 2) - 1):
-                        line.append(str(ExitPoint())) 
-                    elif (row == (self.rows * 2) - 1) and self.columns == 1:
-                        line.append(str(StartingPoint()))
+                        line.append(ExitPoint(row, tile))
+                    elif (row == (self.rows * 2) - 1) and tile == 1:
+                        line.append(StartingPoint(row, tile))
                     else:
-                        line.append(str(Tile())) 
+                        line.append(Tile(row, tile))
 
             self.board.append(line)
 
         """Génration des portails"""
 
-        for row in range(1, (self.rows * 2), 2):
+        for tile in range(1, (self.rows * 2), 2):
             line = []
 
             for tile in range(1, (self.columns * 2), 2):  
@@ -92,9 +92,9 @@ class Board:
 
             for position, tile in enumerate(row):
                 if position < len(row):
-                    printed_line += tile
+                    printed_line += str(tile)
                 else:
-                    printed_line += (tile + "\n")
+                    printed_line += (str(tile) + "\n")
 
             print(printed_line)
 
@@ -115,9 +115,6 @@ class Tile:
 
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.representation = "   "
-
-        # entré et sortie en premier
 
     def check_win():
 
@@ -127,27 +124,23 @@ class Tile:
         if ai.pos_x == sortie.pos_x and ai.pos_y == sortie.pos_y:
             print("PERDU !")
 
-    def __str__():
+    def __str__(self):
         return "   "
 
 class StartingPoint(Tile):
 
-    def __init__(self):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y)
 
-        self.pos_x = rows
-        self.pos_y = 0
-
-        def __str__():
-            return " S "
+    def __str__(self):
+        return " S "
 
 class ExitPoint(Tile):
 
-    def __init__(self):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y)
 
-        self.pos_x = 0
-        self.pos_y = columns
-
-    def __str__():
+    def __str__(self):
         return " E "
 
         # sa representation
