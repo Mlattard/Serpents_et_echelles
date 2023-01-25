@@ -147,7 +147,7 @@ class ExitPoint(Tile):
         self.pos_x = 0
         self.pos_y = columns
 
-    def __str__():
+    def __str__(self):
         return " E "
 
         # sa representation
@@ -205,15 +205,13 @@ class Obstacle(Tile):
 
 class Chance(Tile):
 
-    def __init__(self): # +/-
+    def __init__(self):
         self.lucky_tile = "♣"
 
+    def get_card(self):
+        return Card()
 
-        # sa representation
-        pass
         # quan d on tombe sur case chance, on ferait self.bag apped item
-        # méthode qui fait piger random une carte de la classe carte
-        # def what they do 
 
 class Player(Tile):
 
@@ -263,10 +261,10 @@ class Card:
 
     def __init__(self):
 
-        # ex self.valeur = 1 ou -1
-        ''' est ce qu'on fait deux classes différentes (+1, -1) ??? '''
-        pass   
+        self.valeur = random.choice(-1,1)
+        return self.valeur
 
+     
 
 class Startup:
 
@@ -309,7 +307,7 @@ class Startup:
                     self.instructions()
 
                 elif player_option == 3:
-                    pass
+                    self.change_level()
 
                 elif player_option == 4:
                     print("\n\n\nSee you next time!\n\n\n")
@@ -352,17 +350,16 @@ class Startup:
             level_choice = int(input("Please select your difficulty level (ex: 2): "))
 
             if level_choice == 1:
-                pass
+                self.board = Board(8, 8, 0.05)
+
             elif level_choice == 2:
-                pass
+                self.board = Board (12, 12, 0.01)
+
             elif level_choice == 3:
-                pass
+                self.board = Board (16, 16, 0.2)
+
             elif level_choice == 4:
                 exit = True
-# avec generate_board
-# rows : int = 8, columns : int = 8, rate : float = 0.05
-#  rows : int = 12, columns : int = 12, rate : float = 0.1
-#  rows : int = 16, columns : int = 16, rate : float = 0.2 
-        
+
 game = Startup()
 game.menu()
