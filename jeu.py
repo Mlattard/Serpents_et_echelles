@@ -343,13 +343,19 @@ class Startup:
             level_choice = int(input("Please select your difficulty level (ex: 2): "))
 
             if level_choice == 1:
+                print("You chose the level Easy")
                 self.board = Board(8, 8, 0.05)
+                self.board.generate_board()
 
             elif level_choice == 2:
+                print("You chose the level Moderate")
                 self.board = Board (12, 12, 0.01)
+                self.board.generate_board()
 
             elif level_choice == 3:
+                print("You chose the level Hard")
                 self.board = Board (16, 16, 0.2)
+                self.board.generate_board()
 
             elif level_choice == 4:
                 exit = True
