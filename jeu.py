@@ -55,11 +55,11 @@ class Board:
                     elif tile % 2 == 0:
                         line.append("│")
                     elif row == 1 and (tile == (self.columns * 2) - 1):
-                        line.append(ExitPoint()) 
+                        line.append(str(ExitPoint())) 
                     elif (row == (self.rows * 2) - 1) and self.columns == 1:
-                        line.append(StartingPoint())
+                        line.append(str(StartingPoint()))
                     else:
-                        line.append(Tile()) 
+                        line.append(str(Tile())) 
 
             self.board.append(line)
 
@@ -71,7 +71,7 @@ class Board:
             for tile in range(1, (self.columns * 2), 2):  
                 line.append("000")
 
-        """Génration des cases chaceuses"""
+        """Génration des cases chanceuses"""
 
         # Board de départ
 
@@ -128,8 +128,7 @@ class Tile:
             print("PERDU !")
 
     def __str__():
-        
-        pass
+        return "   "
 
 class StartingPoint(Tile):
 
@@ -138,9 +137,8 @@ class StartingPoint(Tile):
         self.pos_x = rows
         self.pos_y = 0
 
-        # sa representation
-        pass
-        # def what they do
+        def __str__():
+            return " S "
 
 class ExitPoint(Tile):
 
@@ -149,8 +147,10 @@ class ExitPoint(Tile):
         self.pos_x = 0
         self.pos_y = columns
 
+    def __str__():
+        return " E "
+
         # sa representation
-        pass
         # def what they do
 
 class Portal(Tile):
