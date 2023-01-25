@@ -54,7 +54,7 @@ class Board:
                     elif tile % 2 == 0:
                         line.append("│")
                     else:
-                        line.append(" ")
+                        line.append("   ")
 
             self.board.append(line)
 
@@ -258,7 +258,7 @@ class Startup:
     def __init__(self):
 
         self.board = Board()
-        pass
+        self.board.generate_board()
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -287,7 +287,8 @@ class Startup:
                 self.clear()
 
                 if player_option == 1:
-                    pass
+                    self.board.display_board()
+                    sortie = input("\nPress Enter to exit: ")
 
                 elif player_option == 2:
                     self.instructions()
@@ -296,7 +297,7 @@ class Startup:
                     pass
 
                 elif player_option == 4:
-                    print("See you next time!")
+                    print("\n\n\nSee you next time!\n\n\n")
                     exit = True
 
                 else: 
@@ -324,8 +325,6 @@ class Startup:
 
         self.play_game = Board()
 
-        pass
-
     def change_level(self):
         exit = False
         while not exit:
@@ -345,18 +344,12 @@ class Startup:
                 pass
             elif level_choice == 4:
                 exit = True
-            else: 
-                print("Sorry, this is not one of the options")
 
         # choix ==2 
         # self.rows sera changé pour 12
 
-board = Board()
-board.generate_board()
-board.display_board()
-
-# game = Startup()
-# game.menu()
+game = Startup()
+game.menu()
 
 # Demarrage
 
