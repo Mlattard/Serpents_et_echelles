@@ -10,83 +10,58 @@ class Board:
         self.columns = columns
         self.rate = rate
 
-    def __str__(self):
+    def generate_board(self):
 
-        printed_board = ""
+        self.board = []
 
-        for row in range(self.board):
-            for tile in range(self.board_generator[row]):
-                if tile < len(self.board[row]):
-                    printed_board += self.board[row][tile]
-                else:
-                    printed_board += self.board[row][tile] + "\n"
+        for row in range(0, (self.rows * 2) + 1):
+            line = []
 
-        return printed_board
-
-    def board_generator(self):
-
-        self.board = [] # matrice
-        # portals_position = random.sample(range(self.columns), (self.columns * self.rows) * self.rate)
-
-        for row in range(0, self.rows):
-            line = [] # ligne dans la matrice
-            for tile in range(0, self.columns):
+            for tile in range(0, (self.columns * 2 + 1)):  
                 if row == 0:
                     if tile == 0:
                         line.append("╔")
-                    if tile == self.columns:
+                    elif tile == (self.columns * 2):
                         line.append("╗")
-                    if tile // 4 == 0:
+                    elif tile % 2 == 0:
                         line.append("╤")
                     else:
                         line.append("═══")
 
-                if row == self.rows:
+                elif row == (self.rows * 2):
                     if tile == 0:
                         line.append("╚")
-                    if tile == self.columns:
+                    elif tile == (self.columns * 2):
                         line.append("╝")
-                    if tile // 4 == 0:
+                    elif tile % 2 == 0:
                         line.append("╧")
                     else:
                         line.append("═══")
 
-                if row // 2 != 0:
+                elif row % 2 == 0:
                     if tile == 0:
                         line.append("╟")
-                    if tile == self.columns:
+                    elif tile == (self.columns * 2):
                         line.append("╢")
-                    if tile // 4 == 0:
+                    elif tile % 2 == 0:
                         line.append("┼")
                     else:
                         line.append("───")
 
-                if row // 2 == 0:
-                    if (tile == 0) or (tile == self.columns):
+                elif row % 2 != 0:
+                    if (tile == 0) or (tile == (self.columns * 2)):
                         line.append("║")
-                    if tile // 4 == 0:
+                    elif tile % 2 == 0:
                         line.append("│")
                     else:
                         line.append(" ")
 
-                self.board.append(line)
-            
-        print(self.board)
+            self.board.append(line)
 
         # Board de départ
 
-        # logique avec random de generateur de tuile, if l'un est tombe du le 20% de chance, l'autre ne peut pas
-        # for line in lines:
-        #   for tile in tiles:
-        #       self.tile = Tuile ou Chance ou Obstacle . random
-        #       self.board[row.append(self.tile)]
-
         # 2 cases pas générée aleatoirement (depart et arrivée)
         # si on est funky on pourrait faire bouger la case arrivée
-
-        ''' Comment on peut faire en sorte qu'un portail généré sur une case soit ensuite associé à un autre portail ?
-        J'ai peut-etre une idee si on decide à l'avance du nombre de portail par niveau mais c'est un peu brute force.
-        On pourrait avoir un dictionnaire de portail {portail_1 = pos1, pos2, portail_2 = pos1, pos2, etc...} '''
 
         """
         2 - set random -> create pair
@@ -95,13 +70,18 @@ class Board:
     
         """
 
-    def display_board():
+    def display_board(self):
+        
+        for row in self.board:
+            printed_line = ""
 
+            for position, tile in enumerate(row):
+                if position < len(row):
+                    printed_line += tile
+                else:
+                    printed_line += (tile + "\n")
 
-
-        pass
-        # afficher l'etat du jeux en cours
-        # pertinent?
+            print(printed_line)
 
         ''' quoi faire quand les deux joueurs sont sur la même case ? '''
 
@@ -135,29 +115,6 @@ class Tile:
     def __str__():
         
         pass
-
-"""
-first line:
-corner_upper_left = "╔"
-board_upper_wall = "═" *3
-T = "╤"
-corner_upper_right= "╗"
-
-second line:
-
-board_leftside_wall = "║"
-
-repeat 7x
-empty_tile = " "
-middle_wall_vert = "│"
-+
-empty_tile = " "
-
-board_right_wall = "║"
-
-"""
-
-
 
 class StartingPoint(Tile):
 
@@ -395,7 +352,8 @@ class Startup:
         # self.rows sera changé pour 12
 
 board = Board()
-board.board_generator()
+board.generate_board()
+board.display_board()
 
 # game = Startup()
 # game.menu()
