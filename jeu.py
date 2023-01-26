@@ -71,15 +71,10 @@ class Board:
 
         """Génération des cases chanceuses"""
 
-        # Board de départ
-
-        # 2 cases pas générée aleatoirement (depart et arrivée)
-        # si on est funky on pourrait faire bouger la case arrivée
+       
 
         """
-        2 - set random -> create pair
-        3 - si on veut mettre random la case depart (position 1 a 6) SI ON A LE TEMPS
-        trajet en serpentin: verif a faire avc la parité des lignes
+
     
         """
 
@@ -182,13 +177,13 @@ class Portal(Tile):
         
         """""
     
-class Obstacle(Tile):
+# class Obstacle(Tile):
 
-    def __init__(self):
+#     def __init__(self):
 
-        # visel/representation graphique
-        # def what they do
-        pass
+#         # visel/representation graphique
+#         # def what they do
+#         pass
 
 class Chance(Tile):
 
@@ -204,7 +199,7 @@ class Player(Tile):
     def __init__(self):
         # self = ☺
 
-        self.bag = [] # Card
+        self.bag = [] 
         # part avec une sac vide et ex tombe sur case chance
         # on ajoute une carte X a notre main 
         pass
