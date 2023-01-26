@@ -329,27 +329,46 @@ class Startup:
             print("1 - Easy")
             print("2 - Moderate")
             print("3 - Hard")
-            print("4 - Go back")
+            print("4 - Go back to the menu")
+            
 
             level_choice = int(input("Please select your difficulty level (ex: 2): "))
 
             if level_choice == 1:
-                print("You chose the level Easy")
+                print()
+                print("You chose the level Easy! Lets have fun!")
+                print()
                 self.board = Board(8, 8, 0.05)
                 self.board.generate_board()
-
+                
             elif level_choice == 2:
-                print("You chose the level Moderate")
+                print()
+                print("You chose the level Moderate! I see you enjoy challenges.")
+                print()
                 self.board = Board (12, 12, 0.01)
                 self.board.generate_board()
-
+                
             elif level_choice == 3:
-                print("You chose the level Hard")
+                print()
+                print("You chose the level Hard! You must be very courageous")
+                print()
                 self.board = Board (16, 16, 0.2)
                 self.board.generate_board()
 
             elif level_choice == 4:
                 exit = True
+                
+            # si je met au niveau des if le self.board.generate_board ainsi que exit = True 9 pour revenir au menu), 
+            # ca ne permet pas d'afficher les prints du menu vu que cest renvoyé direct au menu, 
+            # où il y a le self.clear avant d'afficher le menu. Donc tout s'Efface.
+
+            # pour que ca s'Affiche faudrait laisser la boucle while et mettre une option pour revenir au menu. La ca s'Affiche et ca marche
+
+            
+
+    
+
+            
 
 game = Startup()
 game.menu()
