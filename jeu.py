@@ -53,11 +53,7 @@ class Board:
                     if (tile == 0) or (tile == (self.columns * 2)):
                         line.append("║")
                     elif tile % 2 == 0:
-                        line.append("│")
-                    elif row == 1 and (tile == (self.columns * 2) - 1):
-                        line.append(ExitPoint(row, tile))
-                    elif (row == (self.rows * 2) - 1) and tile == 1:
-                        line.append(StartingPoint(row, tile))
+                        line.append("│")                        
                     else:
                         line.append(Tile(row, tile))
 
@@ -65,13 +61,15 @@ class Board:
 
         """Génration des portails"""
 
-        for tile in range(1, (self.rows * 2), 2):
-            line = []
+        for rows in self.board:
+            for tile in range(len(rows)):
+                if ((rows == 1) and (tile == len(rows) - 1)) :
+                    self.board[rows][tile] = ExitPoint(row, tile)
+                elif ((rows == len(self.board) - 1) and (tile == 1)):
+                    self.board[rows][tile] = StartingPoint(row, tile)
 
-            for tile in range(1, (self.columns * 2), 2):  
-                line.append("000")
 
-        """Génration des cases chanceuses"""
+        """Génération des cases chanceuses"""
 
         # Board de départ
 
@@ -143,9 +141,6 @@ class ExitPoint(Tile):
     def __str__(self):
         return " E "
 
-        # sa representation
-        # def what they do
-
 class Portal(Tile):
 
     def __init__(self):
@@ -187,7 +182,6 @@ class Portal(Tile):
         
         """""
     
-    
 class Obstacle(Tile):
 
     def __init__(self):
@@ -198,13 +192,12 @@ class Obstacle(Tile):
 
 class Chance(Tile):
 
+    # quand on tombe sur case chance, on ferait self.bag apped item
     def __init__(self):
         self.lucky_tile = "♣"
 
     def get_card(self):
-        return Card()
-
-        # quan d on tombe sur case chance, on ferait self.bag apped item
+        return Card()     
 
 class Player(Tile):
 
@@ -240,9 +233,8 @@ class Player(Tile):
         pass
 
     def __str__():
-
-        pass
-        # le player est représenté 
+    # le player est représenté
+        pass 
 
 class Ai(Player):
 
@@ -258,7 +250,6 @@ class Card:
         return self.valeur
 
      
-
 class Startup:
 
     def __init__(self):
