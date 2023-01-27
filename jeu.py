@@ -97,13 +97,18 @@ class Board:
 
         """Association des portails"""
         self.set_done = []
+        pos = 0
         while self.portals_to_set != []:
             new_set = random.sample(self.portals_to_set, 2)
+            new_set[0].color = game.COLORS[pos]
+            new_set[1].color = game.COLORS[pos]
             self.set_done.append(new_set)
+            pos += 1
             new_set[0].pair = new_set[1]
             new_set[1].pair = new_set[0]
             self.portals_to_set.remove(new_set[0])
             self.portals_to_set.remove(new_set[1])
+            
 
         """Génération des cases chanceuses"""
         i = 0
@@ -186,10 +191,12 @@ class Portal(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
-        self.COLORS = ("red", "green", "yellow", "blue", "magenta", "cyan") 
+        self.pair: Portal #changer pour next
+        self.color = None
 
     def __str__(self):
-        return " ☼ "
+        return colored(" ☼ ", self.color)
+        
         
     
 # class Obstacle(Tile):
@@ -261,6 +268,7 @@ class Startup:
     def __init__(self):
         self.board = Board()
         self.level = "Easy"
+        self.COLORS = ("red", "green", "yellow", "blue", "magenta", "cyan")
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
