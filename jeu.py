@@ -13,12 +13,13 @@ class Board:
         self.new_board = []
 
     def generate_board(self):
-
+       
         """Génération du plateau vide et des cases Départ et Arrivée"""
+        self.empty_tiles = []
+
         for row in range(0, (self.rows * 2)+ 1):
             line = []
-            self.empty_tiles = []
-
+            
             for tile in range(0, (self.columns * 2 + 1)):  
                 if row == 0:
                     if tile == 0:
