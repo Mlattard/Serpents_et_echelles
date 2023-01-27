@@ -360,3 +360,5 @@ class Startup:
         
 game = Startup()
 game.menu()
+
+# ajouter un menu pour cjhanger la langue d'affichage
