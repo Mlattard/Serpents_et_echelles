@@ -104,8 +104,8 @@ class Board:
             new_set[1].color = game.COLORS[pos]
             self.set_done.append(new_set)
             pos += 1
-            new_set[0].pair = new_set[1]
-            new_set[1].pair = new_set[0]
+            new_set[0].next = new_set[1]
+            new_set[1].next = new_set[0]
             self.portals_to_set.remove(new_set[0])
             self.portals_to_set.remove(new_set[1])
             
@@ -191,14 +191,13 @@ class Portal(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
-        self.pair: Portal #changer pour next
+        self.next : Portal 
         self.color = None
 
     def __str__(self):
         return colored(" ☼ ", self.color)
         
         
-    
 # class Obstacle(Tile):
 
 #     def __init__(self):
