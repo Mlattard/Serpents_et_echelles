@@ -83,7 +83,7 @@ class Board:
                     dans_cadre.append(False)
             
             touche = 0
-            for pos in range(len(directions)): 
+            for pos in range(len(dans_cadre)): 
                 if dans_cadre[pos] == True and (str(self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]]) != " ☼ "):
                     touche += 1
                 elif dans_cadre[pos] == False:
@@ -100,6 +100,8 @@ class Board:
         while self.portals_to_set != []:
             new_set = random.sample(self.portals_to_set, 2)
             self.set_done.append(new_set)
+            new_set[0].pair = new_set[1]
+            new_set[1].pair = new_set[0]
             self.portals_to_set.remove(new_set[0])
             self.portals_to_set.remove(new_set[1])
 
@@ -184,9 +186,7 @@ class Portal(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
-    
-    def send_to_next(self):
-        self.paire = game.board.set_done["""commentjetrouvecetindex"""]
+        self.COLORS = ("red", "green", "yellow", "blue", "magenta", "cyan") 
 
     def __str__(self):
         return " ☼ "
@@ -260,7 +260,6 @@ class Startup:
 
     def __init__(self):
         self.board = Board()
-        self.board.generate_board()
         self.level = "Easy"
 
     def clear(self):
@@ -268,7 +267,7 @@ class Startup:
 
     def menu(self):
         self.clear()
-
+        
         with open("premise.txt", "r", encoding="utf-8") as premise_game:
             description = premise_game.read()
             print(f"{description}") 
@@ -278,6 +277,7 @@ class Startup:
         if enter_the_game.lower() == "y": 
             exit = False
             while not exit:
+                
                 self.clear()
                 print(colored("Welcome to Portals and Portals :", "green"))
                 print(f"1 - Play - {self.level}")
@@ -287,8 +287,10 @@ class Startup:
 
                 player_option = int(input("Please enter your option's number (1, 2, 3 or 4): "))
                 self.clear()
-
+                
                 if player_option == 1:
+                    game.board.new_board = []
+                    self.board.generate_board()
                     self.board.display_board()
                     exit = input("\nPress Enter to exit: ")
 
