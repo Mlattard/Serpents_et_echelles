@@ -4,19 +4,20 @@ from termcolor import colored
 
 class Board:
 
-    def __init__(self, rows : int = 8, columns : int = 8, rate : float = 0.05):
+    def __init__(self, rows : int = 6, columns : int = 6, num_portals : int = 6, num_lucky : int = 6):
 
         self.rows = rows
         self.columns = columns
-        self.rate = rate
+        self.num_portals = num_portals
+        self.num_lucky = num_lucky
+        self.new_board = []
 
     def generate_board(self):
 
-        self.board = []
-
         """Génération du plateau vide et des cases Départ et Arrivée"""
-        for row in range(0, (self.rows * 2) + 1):
+        for row in range(0, (self.rows * 2)+ 1):
             line = []
+            self.empty_tiles = []
 
             for tile in range(0, (self.columns * 2 + 1)):  
                 if row == 0:
@@ -53,34 +54,84 @@ class Board:
                     if (tile == 0) or (tile == (self.columns * 2)):
                         line.append("║")
                     elif tile % 2 == 0:
-                        line.append("│")                        
+                        line.append("│")
+                    elif row == 1 and (tile == (self.columns * 2)- 1):
+                        line.append(ExitPoint(row, tile))
+                    elif (row == (self.rows * 2)- 1) and tile == 1:
+                        line.append(StartingPoint(row, tile))                      
                     else:
                         line.append(Tile(row, tile))
+                        self.empty_tiles.append([row, tile])
 
-            self.board.append(line)
+            self.new_board.append(line)
 
-        """Génration des portails"""
+        """Génération des portails"""
+        i = 0
+        self.portals_to_set = []
+        while i in range(self.num_portals):
+            new_portal = random.randint(0, len(self.empty_tiles)- 1)
+            pos_x = self.empty_tiles[new_portal][0]
+            pos_y = self.empty_tiles[new_portal][1]
+            directions = [(2, 0), (-2, 0), (0, 2), (0, -2)]
+            dans_cadre = []
 
-        for rows in self.board:
-            for tile in range(len(rows)):
-                if ((rows == 1) and (tile == len(rows) - 1)) :
-                    self.board[rows][tile] = ExitPoint(row, tile)
-                elif ((rows == len(self.board) - 1) and (tile == 1)):
-                    self.board[rows][tile] = StartingPoint(row, tile)
+            for x, y in directions:
+                if (pos_x + x >= 0 and pos_x + x < len(self.new_board)) and (pos_y + y >= 0 and pos_y + y < len(self.new_board[0])):
+                    dans_cadre.append(True)
+                else:
+                    dans_cadre.append(False)
+            
+            touche = 0
+            for pos in range(len(directions)): 
+                if dans_cadre[pos] == True and (str(self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]]) != " ☼ "):
+                    touche += 1
+                elif dans_cadre[pos] == False:
+                    touche += 1
+                
+            if touche == 4:        
+                self.new_board[pos_x][pos_y] = Portal(pos_x, pos_y)
+                self.portals_to_set.append(self.new_board[pos_x][pos_y])
+                self.empty_tiles.remove(self.empty_tiles[new_portal])
+                i += 1
 
+        """Association des portails"""
+        self.set_done = []
+        while self.portals_to_set != []:
+            new_set = random.sample(self.portals_to_set, 2)
+            self.set_done.append(new_set)
+            self.portals_to_set.remove(new_set[0])
+            self.portals_to_set.remove(new_set[1])
 
         """Génération des cases chanceuses"""
+        i = 0
+        while i in range(self.num_lucky):
+            new_lucky = random.randint(0, len(self.empty_tiles)- 1)
+            pos_x = self.empty_tiles[new_lucky][0]
+            pos_y = self.empty_tiles[new_lucky][1]
+            directions = [(2, 0), (-2, 0), (0, 2), (0, -2)]
+            dans_cadre = []
+            
+            for x, y in directions:
+                if (pos_x + x >= 0 and pos_x + x < len(self.new_board)) and (pos_y + y >= 0 and pos_y + y < len(self.new_board[0])):
+                    dans_cadre.append(True)
+                else:
+                    dans_cadre.append(False)
+            
+            touche = 0
+            for pos in range(len(dans_cadre)):
+                if dans_cadre[pos] == True and (str(self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]]) != " ♣ "):
+                    touche += 1
+                elif dans_cadre[pos] == False:
+                    touche += 1
 
-       
-
-        """
-
-    
-        """
+            if touche == 4:
+                self.new_board[pos_x][pos_y] = Chance(pos_x, pos_y)
+                self.empty_tiles.remove(self.empty_tiles[new_lucky])
+                i += 1
 
     def display_board(self):
         
-        for row in self.board:
+        for row in self.new_board:
             printed_line = ""
 
             for position, tile in enumerate(row):
@@ -93,14 +144,6 @@ class Board:
 
         ''' quoi faire quand les deux joueurs sont sur la même case ? '''
 
-    def __str__():
-
-        pass  
-        # Disposition des tuiles
-        # Disposition des portails    
-        # Variété de tableau
-        # déplacements: effets selon les cartes
-
 
 class Tile:
 
@@ -109,6 +152,9 @@ class Tile:
         self.pos_x = pos_x
         self.pos_y = pos_y
 
+    def __str__(self):
+        return "   "
+
     def check_win():
 
         if player.pos_x == sortie.pos_x and player.pos_y == sortie.pos_y:
@@ -116,9 +162,6 @@ class Tile:
 
         if ai.pos_x == sortie.pos_x and ai.pos_y == sortie.pos_y:
             print("PERDU !")
-
-    def __str__(self):
-        return "   "
 
 class StartingPoint(Tile):
 
@@ -138,44 +181,15 @@ class ExitPoint(Tile):
 
 class Portal(Tile):
 
-    def __init__(self):
-        # self.next : Portail
-        # self.i = i: int
-        # self.j = j: int
-
-        # sa representation
-        pass
-        # def what they do
-        
-        # idée: quand le joueur passe dans un portail, 
-        # afficher un petit texte de mise en situation comme quoi il a changé d'univers/ il se retrouve dans de contrées inconnus
-        """"
-        portail: si elle est juste un portail, il y a des verif a faire. (verifier que ce n'Est pas une case chance)
-        on peut placer les portails en paire (decider combien on en veut ex. 5% des cases)
-        placer les portails aleatoirement (liste de portails to_set  set_portail)
-
-        to_set: ex. 5% pos_aleatoire. 
-        index aleatoire(2 index(a,b): set portals next) (i,j) 0... len(to_set)-1, 
-
-        [Portals(i,j),
-         Portals(i,j)
-         ...
-         Portals(i,j)]
-
-        to_set[a].next = to_set[b]
-        to_set[b].next = to_set[a]
-        set.append(to_set[a])
-        set.append(to_set[b])
-        delete de l'Ancienne liste
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y)
     
-        
-        penser a la proportion paire
-        tester si bidirectionnel est fun ou pas (pt implanter certains portails unidirectionnels)
+    def send_to_next(self):
+        self.paire = game.board.set_done["""commentjetrouvecetindex"""]
 
-        set_portals: logique: (enlever de tp_set et la mettre dans la liste set_portals quand ils sont definis)
-
+    def __str__(self):
+        return " ☼ "
         
-        """""
     
 # class Obstacle(Tile):
 
@@ -188,8 +202,11 @@ class Portal(Tile):
 class Chance(Tile):
 
     # quand on tombe sur case chance, on ferait self.bag apped item
-    def __init__(self):
-        self.lucky_tile = "♣"
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y)
+        
+    def __str__(self):
+        return " ♣ "
 
     def get_card(self):
         return Card()     
@@ -197,15 +214,14 @@ class Chance(Tile):
 class Player(Tile):
 
     def __init__(self):
-        # self = ☺
-
-        self.bag = [] 
+        self.bag = []
         # part avec une sac vide et ex tombe sur case chance
         # on ajoute une carte X a notre main 
-        pass
+    
+    def __str__(self):
+        return " ☺ "
 
     def roll_dice(self):
-
         return random.randint(1,6)
         # valeur de deplacement associé selon le lancé de dé.
 
@@ -222,14 +238,9 @@ class Player(Tile):
         pass
 
     def move_token(self, roll):
-
         self.player_position += roll
         # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
-        pass
 
-    def __str__():
-    # le player est représenté
-        pass 
 
 class Ai(Player):
 
@@ -240,7 +251,6 @@ class Ai(Player):
 class Card:
 
     def __init__(self):
-
         self.valeur = random.choice(-1,1)
         return self.valeur
 
@@ -248,15 +258,14 @@ class Card:
 class Startup:
 
     def __init__(self):
-
         self.board = Board()
         self.board.generate_board()
+        self.level = "Easy"
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def menu(self):
-
         self.clear()
 
         with open("premise.txt", "r", encoding="utf-8") as premise_game:
@@ -270,7 +279,7 @@ class Startup:
             while not exit:
                 self.clear()
                 print(colored("Welcome to Portals and Portals :", "green"))
-                print("1 - Play")
+                print(f"1 - Play - {self.level}")
                 print("2 - Read the Instructions")
                 print("3 - Change the difficulty")
                 print("4 - Exit the game\n")
@@ -314,57 +323,30 @@ class Startup:
                 instructions_exit = True
 
     def play(self):
-
         self.play_game = Board()
 
-    def change_level(self):
-        exit = False
-        while not exit:
-            print("You can change the difficulty level")
-            print("1 - Easy")
-            print("2 - Moderate")
-            print("3 - Hard")
-            print("4 - Go back to the menu")
+    def change_level(self):   
+        print("You can change the difficulty level")
+        print("1 - Easy")
+        print("2 - Moderate")
+        print("3 - Hard")
+        
+        level_choice = int(input("Please select your difficulty level (ex: 2): "))
+
+        if level_choice == 1:
+            self.board = Board(6, 6, 6, 6)
+            self.level = "Easy"
             
-
-            level_choice = int(input("Please select your difficulty level (ex: 2): "))
-
-            if level_choice == 1:
-                print()
-                print("You chose the level Easy! Lets have fun!")
-                print()
-                self.board = Board(8, 8, 0.05)
-                
-            elif level_choice == 2:
-                print()
-                print("You chose the level Moderate! I see you enjoy challenges.")
-                print()
-                self.board = Board (12, 12, 0.01)
-                
-            elif level_choice == 3:
-                print()
-                print("You chose the level Hard! You must be very courageous")
-                print()
-                self.board = Board (16, 16, 0.2)
-
-            elif level_choice == 4:
-                self.board.generate_board()
-                exit = True
-                
-            # si je met au niveau des if le self.board.generate_board ainsi que exit = True 9 pour revenir au menu), 
-            # ca ne permet pas d'afficher les prints du menu vu que cest renvoyé direct au menu, 
-            # où il y a le self.clear avant d'afficher le menu. Donc tout s'Efface.
-
-            # pour que ca s'Affiche faudrait laisser la boucle while et mettre une option pour revenir au menu. La ca s'Affiche et ca marche
-
-            # par contre, je pourrais pt mettre self.board.generate_board() a l'option 4 seulement, 
-            # car le player n'aura pas le choix de sortir du menu donc enregistrer les changements par là. Essayons ca
-
+        elif level_choice == 2:
+            self.board = Board(8, 8, 8, 8)
+            self.level = "Moderate"
             
+        elif level_choice == 3:
+            self.board = Board(12, 12, 12, 12)
+            self.level = "Hard"
 
-    
+        self.board.generate_board()
 
-            
-
+        
 game = Startup()
 game.menu()
