@@ -150,7 +150,6 @@ class Board:
 
             print(printed_line)
 
-        ''' quoi faire quand les deux joueurs sont sur la même case ? '''
 
 
 class Tile:
@@ -208,7 +207,6 @@ class Portal(Tile):
 
 class Chance(Tile):
 
-    # quand on tombe sur case chance, on ferait self.bag apped item
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
         
@@ -246,13 +244,19 @@ class Player(Tile):
 
     def move_token(self, roll):
         self.player_position += roll
-        # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
 
+        # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
+    def both_player(self):
+        return "☺ ☻"
 
 class Ai(Player):
+    def __init__(self):
+        super().__init__()
+        pass
 
-    # même actions que player, sans input
-    pass
+    def __str__(self):
+        return " ☻ "
+
 
 
 class Card:
