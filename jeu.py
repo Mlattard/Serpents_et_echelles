@@ -196,14 +196,6 @@ class Portal(Tile):
     def __str__(self):
         return colored(" ☼ ", self.color)
         
-        
-# class Obstacle(Tile):
-
-#     def __init__(self):
-
-#         # visel/representation graphique
-#         # def what they do
-#         pass
 
 class Chance(Tile):
 
@@ -216,36 +208,55 @@ class Chance(Tile):
     def get_card(self):
         return Card()     
 
+
 class Player(Tile):
 
-    def __init__(self):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(pos_x, pos_y)
+        
         self.bag = []
-        # part avec une sac vide et ex tombe sur case chance
-        # on ajoute une carte X a notre main 
+        
+        if self.pos_x == Chance.pos_x and self.pos_y == Chance.pos_y:
+            self.bag.append(Card)
+            return self.bag
     
     def __str__(self):
         return " ☺ "
 
     def roll_dice(self):
         return random.randint(1,6)
-        # valeur de deplacement associé selon le lancé de dé.
 
-    def play_card():
 
-        # prend la valeur de placement et tu +1 ou -1 selon self.bag if les cartes sont dispo dans self.bag
-        # if +1 présent. input veux tu faire +1
-        # if -1 présent. input veux tu faire -1
-        # if +1 -1 présent. input veux tuf aire +1 ou -1
+# pas certaine de l'implementation play_card
+    def play_card(self):
+        card = Card()
 
-        # prend valeur deplacement et retourne valeur de dep. modifiée
+        if card in self.bag: # verifie s'il y a des cartes dans le bag
+            choose_card = int(input("which special card do you want to play, -1 or 1: "))
+            if choose_card == 1:
+                if Card(1) in self.bag:
+                    self.move_token = self.move_token + 1
+                else:
+                    print("Sorry there is no +1 card in your bag")
 
-        # quand t'as ta valeur de dep final
-        pass
+            elif choose_card == -1:
+                if Card(-1) in self.bag:
+                    self.move_token = self.move_token - 1
+                else:
+                    print("Sorry there is no -1 card in your bag")
 
-    def move_token(self, roll):
-        self.player_position += roll
+        else:
+            print("Sorry there is no card in your bag")
+
+
+    def move_token(self, pos_x, pos_y):
+        position = super().__init__(pos_x, pos_y)
+        position += self.roll_dice()
+        return position
+
 
         # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
+        
     def both_player(self):
         return "☺ ☻"
 
@@ -258,12 +269,11 @@ class Ai(Player):
         return " ☻ "
 
 
-
 class Card:
 
     def __init__(self):
-        self.valeur = random.choice(-1,1)
-        return self.valeur
+        self.card_value = random.choice(-1,1)
+        return self.card_value
 
      
 class Startup:
@@ -364,5 +374,3 @@ class Startup:
         
 game = Startup()
 game.menu()
-
-# ajouter un menu pour cjhanger la langue d'affichage
