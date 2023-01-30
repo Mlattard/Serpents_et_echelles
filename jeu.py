@@ -56,7 +56,7 @@ class Board:
                         line.append("║")
                     elif tile % 2 == 0:
                         line.append("│")
-                    elif row == 1 and (tile == (self.columns * 2)- 1):
+                    elif row == 1 and tile == 1:
                         line.append(ExitPoint(row, tile))
                     elif (row == (self.rows * 2)- 1) and tile == 1:
                         line.append(StartingPoint(row, tile))                      
@@ -151,7 +151,6 @@ class Board:
             print(printed_line)
 
 
-
 class Tile:
 
     def __init__(self, pos_x, pos_y):
@@ -169,6 +168,15 @@ class Tile:
 
         if ai.pos_x == sortie.pos_x and ai.pos_y == sortie.pos_y:
             print("PERDU !")
+
+    def next_tile(self, next_pos_x, next_pos_y):
+        self.next_pos_x = next_pos_x
+        self.next_pos_y = next_pos_y
+
+        self.next_position = [self.next_pos_x, self.next_pos_y]
+        return self.next_position
+
+
 
 class StartingPoint(Tile):
 
@@ -211,7 +219,7 @@ class Chance(Tile):
 
 class Player(Tile):
 
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, pos_x = "?", pos_y = "?"):
         super().__init__(pos_x, pos_y)
         
         self.bag = []
@@ -219,43 +227,67 @@ class Player(Tile):
         if self.pos_x == Chance.pos_x and self.pos_y == Chance.pos_y:
             self.bag.append(Card)
             return self.bag
-    
+
     def __str__(self):
         return " ☺ "
 
-    def roll_dice(self):
-        return random.randint(1,6)
+    """On lance le dé et on trouve la tuile suivante"""
+    def find_nb_steps(self):
+        self.nb_steps = random.randint(1,6)
+        print(f"The dice gives you this number of steps: {self.nb_steps}")
 
-
-# pas certaine de l'implementation play_card
-    def play_card(self):
-        card = Card()
-
-        if card in self.bag: # verifie s'il y a des cartes dans le bag
-            choose_card = int(input("which special card do you want to play, -1 or 1: "))
-            if choose_card == 1:
-                if Card(1) in self.bag:
-                    self.move_token = self.move_token + 1
+        if self.bag != []:
+            if ("+1" in self.bag) and ("-1" not in self.bag):
+                play_card = input("Would you like to advance one tile more? Y/N :")
+                if play_card.lower() == "y":
+                    self.nb_steps += 1
+            if ("+1" not in self.bag) and ("-1" in self.bag):
+                play_card = input("Would you like to advance one tile less? Y/N :")
+                if play_card.lower() == "y":
+                    self.nb_steps -= 1
+            if ("+1" in self.bag) and ("-1" in self.bag):
+                play_card = input("Would you like to advance one tile less? Y/N :")
+                if play_card.lower() == "y":
+                    self.nb_steps -= 1
                 else:
-                    print("Sorry there is no +1 card in your bag")
+                    play_card = input("Would you like to advance one tile less? Y/N :")
+                    if play_card.lower() == "y":
+                        self.nb_steps -= 1
 
-            elif choose_card == -1:
-                if Card(-1) in self.bag:
-                    self.move_token = self.move_token - 1
+        """"rendu la on a determiné le nombre de deplacement a faire"""
+        
+        next_position = [self.pos_x, self.pos_y]        
+        current_row = (self.pos_x + 1) /2 # soit tu peux faire la meme chose avec self.pos_y pour avoir current_tile
+
+        for i in range (1, self.nb_steps + 1):
+            if current_row % 2 == 0:
+                self.next_pos_x = self.pos_x + i
+                if self.next_pos_x > game.board.columns: # soit tu changes game.board ici
+                    self.pos_x = self.next_pos_x - game.board.columns
+                    self.pos_y -= 1 # ici pas certaine que ce soit 1 vu que nos lignes ne sont pas a bond de 1
                 else:
-                    print("Sorry there is no -1 card in your bag")
+                    self.pos_x = self.next_pos_x
+            elif current_row %2 == 1 :
+                self.next_pos_x = self.pos_x - i
+                if self.next_pos_x < 0:
+                    self.pos_x = self.next_pos_x + Board.columns
+                    self.pos_y -= 1 # same, pt pas 1
+                else:
+                    self.pos_x = self.next_pos_x
+                    
+        return next_position
+                          
 
-        else:
-            print("Sorry there is no card in your bag")
 
+    """On sauve la tuile suivante avant de l'ecraser"""
+    def save_tile_under(self):
+        self.tile_under = game.board.new_board[self.next_pos_x][self.next_pos_y]
 
-    def move_token(self, pos_x, pos_y):
-        position = super().__init__(pos_x, pos_y)
-        position += self.roll_dice()
+    """On déplace la tuile joueur a sa prochaine position"""
+    def move_token(self):
+        
+        position += self.find_nb_steps()
         return position
-
-
-        # trover moyen de avancer de D/G quand ligne impair et l'autre G/D paire
         
     def both_player(self):
         return "☺ ☻"
