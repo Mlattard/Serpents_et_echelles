@@ -259,19 +259,22 @@ class Player(Tile):
         next_position = [self.pos_x, self.pos_y]        
         current_row = (self.pos_x + 1) / 2
         current_tile = (self.pos_y + 1) / 2
-
-        for i in range (1, self.nb_steps + 1):
+        remaining_steps = self.nb + 1
+        for i in range (1, remaining_steps):
             if current_row % 2 == 0:
-                self.next_pos_x = self.pos_x + i
+                self.next_pos_x = self.pos_x + i # melangée a savoir si cest x ou y
+                remaining_steps -= 1
                 if self.next_pos_x > game.board.columns:
-                    self.pos_x = self.next_pos_x - game.board.columns
-                    self.pos_y -= 1 # ici pas certaine que ce soit 1 vu que nos lignes ne sont pas a bond de 1
+                    self.next_pos_x = self.pos_x - 1 # ici on monte d'une row
+                    for j in range (1, remaining_steps):
+                        self.next_pos_y = self.pos_y - remaining_steps # ici je veux que mon remaiging steps se fassent vers la G (-1)
                 else:
-                    self.pos_x = self.next_pos_x
+                    self.pos_x = self.next_pos_x # melangée a savoir si cest x ou y
+
             elif current_row %2 == 1 :
                 self.next_pos_x = self.pos_x - i
                 if self.next_pos_x < 0:
-                    self.pos_x = self.next_pos_x + Board.columns
+                    self.pos_x = self.next_pos_x + game.board.columns
                     self.pos_y -= 1 # same, pt pas 1
                 else:
                     self.pos_x = self.next_pos_x
