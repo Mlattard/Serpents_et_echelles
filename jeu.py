@@ -358,7 +358,7 @@ class Startup:
                 if player_option == 1:
                     game.board.new_board = []
                     self.board.generate_board()
-                    self.board.display_board()
+                    self.board.display_board() # devrait être dans la classe Board
                     exit = input("\nPress Enter to exit: ")
 
                 elif player_option == 2:
@@ -420,3 +420,48 @@ class Startup:
         
 game = Startup()
 game.menu()
+
+
+
+"""
+    print(self)
+    i,j = self.player.play()
+    self.move(player,i,j)
+    # pt print(self) sleep (0.5) -> cls()
+
+
+
+    OU PLUTÔT :self.players = [player, AI]
+    
+    dans la classe Board
+    def gameloop():
+        while not exit
+            print(self)  
+            for p in players:
+                i,j = p.play()
+                self.move(p,i,j)
+                # print(self) voir si necessaire
+                exit = self.check_win
+                if pos_x == self.exit.pos_X and pos_y == self.exit.pos_y
+                return True 
+                else: return False
+
+
+def move(p,i,f):
+
+    pos_x = 
+    pos_y = 
+    i =
+    j =
+    if self.board[i][j] is not portail
+    self.board[pos_x][pos_y] = p.under
+    p.under = self.board[i][j]
+    self.board[i][j] = p
+
+
+    i = self.board[i][j].next.x
+    j = self.board[i][j].next.y
+
+
+
+"""
