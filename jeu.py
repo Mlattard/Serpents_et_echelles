@@ -257,8 +257,8 @@ class Player(Tile):
         """"rendu la on a determiné le nombre de deplacement a faire"""
         
         next_position = [self.pos_x, self.pos_y]        
-        current_row = (self.pos_x + 1) /2
-        current_tile = (self.pos_y + 1) /2
+        current_row = (self.pos_x + 1) / 2
+        current_tile = (self.pos_y + 1) / 2
 
         for i in range (1, self.nb_steps + 1):
             if current_row % 2 == 0:
@@ -275,7 +275,12 @@ class Player(Tile):
                     self.pos_y -= 1 # same, pt pas 1
                 else:
                     self.pos_x = self.next_pos_x
-                    
+        self.next_pos_x = (current_row - 1) * 2
+        self.next_pos_y = (current_tile - 1) * 2
+        self.next_pos_x = self.pos_x
+        self.next_pos_y = self.pos_y
+
+
         return next_position
         
                           
