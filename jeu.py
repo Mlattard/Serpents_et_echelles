@@ -12,26 +12,6 @@ class Board:
         self.num_lucky = num_lucky
         self.new_board = []
 
-    def gameloop(self):
-        exit = False
-        self.player = Player((self.columns * 2)- 1, 1)
-        self.ia = Ai((self.columns * 2)- 1, 1)
-        players = [self.player, self.ia]
-        
-        while not exit:
-            print(self)
-            for p in players:
-                i,j = p.game_round()
-                self.move(p,i,j)
-                # print(self) voir si on veut voir le deplacement de l'ia
-                exit = self.check_win()
-                
-    def check_win():
-        if (pos_x == self.exit.pos_x) and (pos_y == self.exit.pos_y):
-            return True
-        else:
-            return False
-
     def generate_board(self):
        
         """Génération du plateau vide et des cases Départ et Arrivée"""
@@ -170,11 +150,30 @@ class Board:
 
             print(printed_line)
 
+    def gameloop(self):
+        exit = False
+        self.player = Player((self.columns * 2)- 1, 1)
+        self.ia = Ai((self.columns * 2)- 1, 1)
+        players = [self.player, self.ia]
+        
+        while not exit:
+            print(self)
+            for p in players:
+                i,j = p.game_round()
+                self.move(p,i,j)
+                # print(self) voir si on veut voir le deplacement de l'ia
+                exit = self.check_win()
+                
+    def check_win():
+        if (pos_x == self.exit.pos_x) and (pos_y == self.exit.pos_y):
+            return True
+        else:
+            return False
+
 
 class Tile:
 
     def __init__(self, pos_x, pos_y):
-
         self.pos_x = pos_x
         self.pos_y = pos_y
 
@@ -193,6 +192,7 @@ class ExitPoint(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
+        self.is_exit = True
 
     def __str__(self):
         return " E "
@@ -201,6 +201,7 @@ class Portal(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
+        self.is_portal = True
         self.next : Portal 
         self.color = None
 
@@ -211,6 +212,7 @@ class Chance(Tile):
 
     def __init__(self, pos_x, pos_y):
         super().__init__(pos_x, pos_y)
+        self.is_chance = True
         
     def __str__(self):
         return " ♣ "
@@ -222,14 +224,17 @@ class Player(Tile):
 
     def __init__(self, pos_x : int, pos_y : int):
         super().__init__(pos_x, pos_y)
+        self.is_player = True
         self.bag = []
         self.tile_under = board[len(self.new_board)-2][1]
 
     def __str__(self):
-        if bla:
-            return "☺ ☻"
-        else:
+        self.tile_under : Ai
+
+        if self.tile_under.is_ai != True:
             return " ☺ "
+        else:
+            return "☺ ☻"
 
     """On lance le dé et on trouve la tuile suivante"""
 
@@ -288,6 +293,7 @@ class Player(Tile):
 class Ai(Player):
     def __init__(self):
         super().__init__()
+        self.is_ai = True
 
     def __str__(self):
         return " ☻ "
@@ -333,9 +339,9 @@ class Startup:
                 self.clear()
 
                 if player_option == 1:
-                    self.board = Board()
-                    self.board.generate_board()
-                    self.board.gameloop()
+                    board = Board()
+                    board.generate_board()
+                    board.gameloop()
 
                 elif player_option == 2:
                     self.instructions()
