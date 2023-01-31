@@ -11,13 +11,26 @@ class Board:
         self.num_portals = num_portals
         self.num_lucky = num_lucky
         self.new_board = []
-        self.player = 
-        self.ia = 
 
     def gameloop(self):
-        sortie = False
-        while not sortie:
+        exit = False
+        self.player = Player((self.columns * 2)- 1, 1)
+        self.ia = Ai((self.columns * 2)- 1, 1)
+        players = [self.player, self.ia]
+        
+        while not exit:
             print(self)
+            for p in players:
+                i,j = p.game_round()
+                self.move(p,i,j)
+                # print(self) voir si on veut voir le deplacement de l'ia
+                exit = self.check_win()
+                
+    def check_win():
+        if (pos_x == self.exit.pos_x) and (pos_y == self.exit.pos_y):
+            return True
+        else:
+            return False
 
     def generate_board(self):
        
@@ -168,15 +181,6 @@ class Tile:
     def __str__(self):
         return "   "
 
-    def check_win():
-
-        if player.pos_x == sortie.pos_x and player.pos_y == sortie.pos_y:
-            print("GAGNÉ !")
-
-        if ai.pos_x == sortie.pos_x and ai.pos_y == sortie.pos_y:
-            print("PERDU !")
-
-
 class StartingPoint(Tile):
 
     def __init__(self, pos_x, pos_y):
@@ -218,17 +222,8 @@ class Player(Tile):
 
     def __init__(self, pos_x : int, pos_y : int):
         super().__init__(pos_x, pos_y)
-        
-        self.pos_x = game.board.new_board[pos_x]
-        self.pos_y = game.board.new_board[pos_y]
-
         self.bag = []
-        
-        self.tile_under = game.board.new_board[len(game.board.new_board)-2][1]
-
-        # if self.pos_x == Chance.pos_x and self.pos_y == Chance.pos_y:
-        #     self.bag.append(Card)
-        #     return self.bag
+        self.tile_under = board[len(self.new_board)-2][1]
 
     def __str__(self):
         if bla:
@@ -239,26 +234,26 @@ class Player(Tile):
     """On lance le dé et on trouve la tuile suivante"""
 
     def game_round(self):
-        self.nb_steps = random.randint(1,6)
-        print(f"The dice gives you this number of steps: {self.nb_steps}")
+        nb_steps = random.randint(1,6)
+        print(f"The dice gives you this number of steps: {nb_steps}")
 
         if self.bag != []:
             if ("+1" in self.bag) and ("-1" not in self.bag):
                 play_card = input("Would you like to advance one tile more? Y/N :")
                 if play_card.lower() == "y":
-                    self.nb_steps += 1
+                    nb_steps += 1
             if ("+1" not in self.bag) and ("-1" in self.bag):
                 play_card = input("Would you like to advance one tile less? Y/N :")
                 if play_card.lower() == "y":
-                    self.nb_steps -= 1
+                    nb_steps -= 1
             if ("+1" in self.bag) and ("-1" in self.bag):
                 play_card = input("Would you like to advance one tile less? Y/N :")
                 if play_card.lower() == "y":
-                    self.nb_steps -= 1
+                    nb_steps -= 1
                 else:
                     play_card = input("Would you like to advance one tile less? Y/N :")
                     if play_card.lower() == "y":
-                        self.nb_steps -= 1
+                        nb_steps -= 1
 
         """"rendu la on a determiné le nombre de deplacement à faire"""
         
@@ -266,30 +261,29 @@ class Player(Tile):
         current_row = (next_pos_x + 1) / 2
         current_tile = (next_pos_y + 1) / 2
 
-        for i in range (1, self.nb_steps + 1):
+        for i in range (1, nb_steps + 1):
             if current_row % 2 == 0:
                 if current_tile < game.board.columns:
                     current_tile += 1
-                    self.nb_steps -= 1
+                    nb_steps -= 1
                 else:
                     current_row -= 1
             elif current_row % 2 == 1:        
                 if current_row > 1:
                     current_tile -= 1
-                    self.nb_steps -= 1
+                    nb_steps -= 1
                 else:
                     current_row -= 1
 
         next_pos_x = (current_row * 2) -1
         next_pos_y = (current_tile * 2) -1
 
-        game.board.new_board[self.pos_x][self.pos_y] = self.tile_under   # la tuile actuelle reprend la valeur de tile_under
+        self.board.new_board[self.pos_x][self.pos_y] = self.tile_under         # la tuile actuelle reprend la valeur de tile_under
         self.tile_under = self.next_tile                                 # on donne a tile_under la valeur de la prochaine case
         self.next_tile = game.board.new_board[next_pos_x][next_pos_y]    # on remplace la prochaine case par la tuile player
 
         if self.tile_under == Portal:                                    # on verifie si la case sauvée dessous est un portail
             self.next_tile = self.next_tile.next                         # on remplace la valeur de next tile par le portail suivant
-
 
 class Ai(Player):
     def __init__(self):
@@ -309,7 +303,6 @@ class Card:
 class Startup:
 
     def __init__(self):
-        self.board = Board()
         self.level = "Easy"
         self.COLORS = ("red", "green", "yellow", "blue", "magenta", "cyan")
 
@@ -340,10 +333,9 @@ class Startup:
                 self.clear()
 
                 if player_option == 1:
-                    game.board.new_board = []
+                    self.board = Board()
                     self.board.generate_board()
-                    self.board.display_board() # devrait être dans la classe Board
-                    exit = input("\nPress Enter to exit: ")
+                    self.board.gameloop()
 
                 elif player_option == 2:
                     self.instructions()
