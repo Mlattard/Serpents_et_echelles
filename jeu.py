@@ -261,16 +261,17 @@ class Player(Tile):
         current_tile = (self.pos_y + 1) / 2
         remaining_steps = self.nb_steps + 1
 
+# melangée a savoir si je dois inverser les x et y pour toute la partie qui suit
         for i in range (1, remaining_steps):
             if current_row % 2 == 0:
-                self.pos_x +=  i # melangée a savoir si cest x ou y
+                self.pos_x +=  i 
                 remaining_steps -= 1
                 if self.pos_x > game.board.columns:
                     self.pos_x -= 1 # ici on monte d'une row
                     for j in range (1, remaining_steps):
-                        self.pos_y -= 1 # ici je veux que mon remaiging steps se fassent vers la G (-1)
+                        self.pos_y -= 1 # je veux que ca soit pour le restant de steps est ce que cEst -= 1 ou -= j
                 else:
-                    self.pos_x = self.pos_x # melangée a savoir si cest x ou y
+                    self.pos_x = self.pos_x 
 
             elif current_row %2 == 1 :
                 self.pos_x -= i
@@ -284,8 +285,8 @@ class Player(Tile):
                     
                 # est ce qu'on doit modifier le y quelque part?
 
-        self.pos_x = (current_row - 1) * 2
-        self.pos_y = (current_tile - 1) * 2
+        self.pos_x = (current_row * 2) - 1
+        self.pos_y = (current_tile * 2) -1
 
         return next_position
         
