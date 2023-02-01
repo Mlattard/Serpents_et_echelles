@@ -1,6 +1,7 @@
 import os
 import random
 from termcolor import colored
+import time
 
 class Board:
 
@@ -11,8 +12,19 @@ class Board:
         self.num_lucky = num_lucky
         self.new_board = []
 
+    def __str__(self):    
+        printed_line = ""
+        for row in self.new_board:
+            
+            for position, tile in enumerate(row):
+                if position < (len(row)-1):
+                    printed_line += str(tile)
+                else:
+                    printed_line += (str(tile) + "\n")
+
+        return printed_line
+
     def generate_board(self):
-        """Génération du plateau vide et des cases Départ et Arrivée"""
         self.empty_tiles = []
 
         for row in range(0, (self.rows * 2)+ 1):
@@ -56,8 +68,10 @@ class Board:
                         line.append("│")
                     elif row == 1 and tile == 1:
                         self.exit = ExitPoint(row, tile)
+                        line.append(self.exit)
                     elif (row == (self.rows * 2)- 1) and tile == 1:
-                        self.start = StartingPoint(row, tile)   
+                        self.start = StartingPoint(row, tile)
+                        line.append(self.start) 
                         self.player = Player(row, tile)
                         self.ai = Ai(row, tile)                  
                     else:
@@ -66,7 +80,6 @@ class Board:
 
             self.new_board.append(line)
 
-        """Génération des portails"""
         i = 0
         self.portals_to_set = []
         while i in range(self.num_portals):
@@ -84,7 +97,7 @@ class Board:
             
             touche = 0
             for pos in range(len(dans_cadre)): 
-                if dans_cadre[pos] == True and (str(self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]]) != " ☼ "):
+                if dans_cadre[pos] == True and self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]].is_portal != True :
                     touche += 1
                 elif dans_cadre[pos] == False:
                     touche += 1
@@ -95,7 +108,6 @@ class Board:
                 self.empty_tiles.remove(self.empty_tiles[new_portal])
                 i += 1
 
-        """Association des portails"""
         self.set_done = []
         pos = 0
         while self.portals_to_set != []:
@@ -109,8 +121,6 @@ class Board:
             self.portals_to_set.remove(new_set[0])
             self.portals_to_set.remove(new_set[1])
             
-
-        """Génération des cases chanceuses"""
         i = 0
         while i in range(self.num_lucky):
             new_lucky = random.randint(0, len(self.empty_tiles)- 1)
@@ -127,7 +137,7 @@ class Board:
             
             touche = 0
             for pos in range(len(dans_cadre)):
-                if dans_cadre[pos] == True and (str(self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]]) != " ♣ "):
+                if dans_cadre[pos] == True and self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]].is_chance != True :
                     touche += 1
                 elif dans_cadre[pos] == False:
                     touche += 1
@@ -137,45 +147,40 @@ class Board:
                 self.empty_tiles.remove(self.empty_tiles[new_lucky])
                 i += 1
 
-    def __str__(self):    
-        for row in self.new_board:
-            printed_line = ""
-
-            for position, tile in enumerate(row):
-                if position < len(row):
-                    printed_line += str(tile)
-                else:
-                    printed_line += (str(tile) + "\n")
-
-        return printed_line
-
     def gameloop(self):
         p : Player
 
         exit = False
         self.player = Player((self.columns * 2)- 1, 1)
-        self.ia = Ai((self.columns * 2)- 1, 1)
-        players = [self.player, self.ia]
-
-        while not exit:
-            print(self)
+        self.ai = Ai((self.columns * 2)- 1, 1)
+        players = [self.player, self.ai]
+        print(self)
+        
+        while not exit:  
             for p in players:
-                i,j = p.game_round()
-                self.move_tiles(p, i, j)
-                """print(self) voir si on veut voir le deplacement de l'ia"""
-                exit = self.check_win()
+                n_line, n_tile = p.game_round()
+                self.move_tiles(p, n_line, n_tile)
+                game.clear()
+                print(self)
+                exit = self.check_win(p)
 
-    def move_tiles(self, p , i, j):
+    def move_tiles(self, p , n_line, n_tile):
+        
+        time.sleep(0.5)
+        self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
+        p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
+        if p.under.is_portal != True:                 # on verifie si la case sauvée dessous est un portail
+            self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
+        else:
+            n_line = p.under.next.pos_x               # on remplace la nouvelle ligne par celle a next_x
+            n_tile = p.under.next.pos_y               # on remplace la nouvelle tuile par celle a next_y
+            self.new_board[n_line][n_tile] = p        # on remplace la valeur de next tile par le portail suivant
+        p.pos_x = n_line                                # pas sur pourquoi les joueurs ne restent pas sur le portail de sortie
+        p.pos_y = n_tile                  
 
-        self.new_board[p.pos_x][p.pos_y] = self.tile_under    # la tuile actuelle reprend la valeur de tile_under
-        self.tile_under = self.next_tile                      # on donne à tile_under la valeur de la prochaine case
-        self.next_tile = game.board.new_board[i][j]           # on remplace la prochaine case par la tuile player
-
-        if self.tile_under == Portal:                         # on verifie si la case sauvée dessous est un portail
-            self.next_tile = self.next_tile.next              # on remplace la valeur de next tile par le portail suivant
-
-    def check_win():
-        if (pos_x == self.exit.pos_x) and (pos_y == self.exit.pos_y):
+    def check_win(self, p):
+        if (p.pos_x == self.exit.pos_x) and (p.pos_y == self.exit.pos_y):
+            print("Win")
             return True
         else:
             return False
@@ -186,6 +191,12 @@ class Tile:
     def __init__(self, pos_x, pos_y):
         self.pos_x = pos_x
         self.pos_y = pos_y
+
+        self.is_exit = False
+        self.is_portal = False
+        self.is_chance = False
+        self.is_player = False
+        self.is_ai = False
 
     def __str__(self):
         return "   "
@@ -236,17 +247,15 @@ class Player(Tile):
         super().__init__(pos_x, pos_y)
         self.is_player = True
         self.bag = []
-        self.tile_under = board[len(self.new_board)-2][1]
+        self.under = game.board.new_board[len(game.board.new_board)-2][1]
 
     def __str__(self):
-        self.tile_under : Ai
+        self.under : Ai
 
-        if self.tile_under.is_ai != True:
+        if self.under.is_ai != True:
             return " ☺ "
         else:
             return "☺ ☻"
-
-    """On lance le dé et on trouve la tuile suivante"""
 
     def game_round(self):
         nb_steps = random.randint(1,6)
@@ -271,25 +280,24 @@ class Player(Tile):
                         nb_steps -= 1
         
         next_pos_x, next_pos_y = self.pos_x, self.pos_y    
-        current_row = (next_pos_x + 1) / 2
-        current_tile = (next_pos_y + 1) / 2
+        current_row = int((next_pos_x + 1) / 2)
+        current_tile = int((next_pos_y + 1) / 2)
 
-        for i in range (1, nb_steps + 1):
+        while nb_steps > 0:
             if current_row % 2 == 0:
-                if current_tile < game.board.columns:
+                if current_tile == game.board.columns:
+                    current_row -= 1
+                else:
                     current_tile += 1
-                    nb_steps -= 1
-                else:
-                    current_row -= 1
             elif current_row % 2 == 1:        
-                if current_row > 1:
-                    current_tile -= 1
-                    nb_steps -= 1
-                else:
+                if current_tile == 1:
                     current_row -= 1
+                else:
+                    current_tile -= 1
+            nb_steps -= 1
 
-        next_pos_x = (current_row * 2) -1
-        next_pos_y = (current_tile * 2) -1
+        next_pos_x = int((current_row * 2) -1)
+        next_pos_y = int((current_tile * 2) -1)
 
         return next_pos_x, next_pos_y
 
@@ -300,9 +308,9 @@ class Ai(Player):
         self.is_ai = True
 
     def __str__(self):
-        self.tile_under : Player
+        self.under : Player
 
-        if self.tile_under.is_player != True:
+        if self.under.is_player != True:
             return " ☻ "
         else:
             return "☺ ☻"
