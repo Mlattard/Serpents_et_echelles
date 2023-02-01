@@ -171,6 +171,8 @@ class Board:
     def move_tiles(self, p : "Player" , n_line, n_tile):
         
         time.sleep(1)
+        if (isinstance(p.under, Player) or isinstance(p.under, Ai)):
+            p.under = p.under.under
         self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
         p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
         if p.under.is_chance:
@@ -261,12 +263,14 @@ class Deck:
                 carte = self.cards[card_choice-1]
             elif card_choice == 3:
                 carte = self.cards[card_choice-1]
+            
+
 
             self.cards.remove(carte)
 
             return carte
         else:
-            print("Sac vide")
+            print("Your deck is empty")
 
     def add_card(self, card : "Card"):
         if len(self.cards) < 3:
@@ -461,3 +465,5 @@ class Startup:
         
 game = Startup()
 game.menu()
+
+
