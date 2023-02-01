@@ -148,7 +148,6 @@ class Board:
                 i += 1
 
     def gameloop(self):
-        p : Player
 
         exit = False
         self.player = Player((self.columns * 2)- 1, 1)
@@ -166,9 +165,11 @@ class Board:
 
     def move_tiles(self, p , n_line, n_tile):
         
-        time.sleep(0.5)
+        time.sleep(1)
         self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
         p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
+        if p.under.is_chance == True:
+            p.bag.append(Card())
         if p.under.is_portal != True:                 # on verifie si la case sauvée dessous est un portail
             self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
         else:
@@ -176,7 +177,7 @@ class Board:
             n_tile = p.under.next.pos_y               # on remplace la nouvelle tuile par celle a next_y
             self.new_board[n_line][n_tile] = p        # on remplace la valeur de next tile par le portail suivant
         p.pos_x = n_line                                # pas sur pourquoi les joueurs ne restent pas sur le portail de sortie
-        p.pos_y = n_tile                  
+        p.pos_y = n_tile
 
     def check_win(self, p):
         if (p.pos_x == self.exit.pos_x) and (p.pos_y == self.exit.pos_y):
@@ -284,16 +285,24 @@ class Player(Tile):
         current_tile = int((next_pos_y + 1) / 2)
 
         while nb_steps > 0:
-            if current_row % 2 == 0:
-                if current_tile == game.board.columns:
-                    current_row -= 1
+            if current_row == 1:
+                if current_tile != 1:
+                    current_tile -= 1
                 else:
-                    current_tile += 1
+                    current_row = int((next_pos_x + 1) / 2)
+                    current_tile = int((next_pos_y + 1) / 2)
+                    nb_steps = 0
             elif current_row % 2 == 1:        
                 if current_tile == 1:
                     current_row -= 1
                 else:
                     current_tile -= 1
+            elif current_row % 2 == 0:
+                if current_tile == game.board.columns:
+                    current_row -= 1
+                else:
+                    current_tile += 1
+            
             nb_steps -= 1
 
         next_pos_x = int((current_row * 2) -1)
@@ -319,8 +328,8 @@ class Ai(Player):
 class Card:
 
     def __init__(self):
-        self.card_value = random.choice(-1,1)
-        return self.card_value
+        self.VALUE = ["-1","+1"]
+        self.card_value = random.sample(self.VALUE, 1)
 
 
 class Startup:
@@ -411,34 +420,6 @@ class Startup:
             self.board = Board(12, 12, 12, 12)
             self.level = "Hard"
 
-        # self.board.generate_board()
-
         
 game = Startup()
 game.menu()
-
-
-
-"""
-    print(self)
-    i,j = self.player.play()
-    self.move(player,i,j)
-    # pt print(self) sleep (0.5) -> cls()
-
-
-
-    OU PLUTÔT :self.players = [player, AI]
-    
-    dans la classe Board
-    def gameloop():
-        while not exit
-            print(self)  
-            for p in players:
-                i,j = p.play()
-                self.move(p,i,j)
-                # print(self) voir si necessaire
-                exit = self.check_win
-                if pos_x == self.exit.pos_X and pos_y == self.exit.pos_y
-                return True 
-                else: return False
-"""
