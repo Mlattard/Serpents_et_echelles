@@ -5,7 +5,7 @@ import time
 
 class Board:
 
-    def __init__(self, rows : int = 6, columns : int = 6, num_portals : int = 6, num_lucky : int = 6):
+    def __init__(self, rows : int = 6, columns : int = 6, num_portals : int = 6, num_lucky : int = 12):
         self.rows = rows
         self.columns = columns
         self.num_portals = num_portals
@@ -67,11 +67,11 @@ class Board:
                     elif tile % 2 == 0:
                         line.append("│")
                     elif row == 1 and tile == 1:
-                        self.exit = ExitPoint(row, tile)
-                        line.append(self.exit)
+                        self.exit_point = ExitPoint(row, tile)
+                        line.append(self.exit_point)
                     elif (row == (self.rows * 2)- 1) and tile == 1:
-                        self.start = StartingPoint(row, tile)
-                        line.append(self.start) 
+                        self.start_point = StartingPoint(row, tile)
+                        line.append(self.start_point) 
                         self.player = Player(row, tile)
                         self.ai = Ai(row, tile)                  
                     else:
@@ -95,14 +95,14 @@ class Board:
                 else:
                     dans_cadre.append(False)
             
-            touche = 0
+            next_to = 0
             for pos in range(len(dans_cadre)): 
                 if dans_cadre[pos] == True and self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]].is_portal != True :
-                    touche += 1
+                    next_to += 1
                 elif dans_cadre[pos] == False:
-                    touche += 1
+                    next_to += 1
                 
-            if touche == 4:        
+            if next_to == 4:        
                 self.new_board[pos_x][pos_y] = Portal(pos_x, pos_y)
                 self.portals_to_set.append(self.new_board[pos_x][pos_y])
                 self.empty_tiles.remove(self.empty_tiles[new_portal])
@@ -135,42 +135,46 @@ class Board:
                 else:
                     dans_cadre.append(False)
             
-            touche = 0
+            next_to = 0
             for pos in range(len(dans_cadre)):
                 if dans_cadre[pos] == True and self.new_board[pos_x + directions[pos][0]][pos_y + directions[pos][1]].is_chance != True :
-                    touche += 1
+                    next_to += 1
                 elif dans_cadre[pos] == False:
-                    touche += 1
+                    next_to += 1
 
-            if touche == 4:
+            if next_to == 4:
                 self.new_board[pos_x][pos_y] = Chance(pos_x, pos_y)
                 self.empty_tiles.remove(self.empty_tiles[new_lucky])
                 i += 1
 
     def gameloop(self):
 
-        exit = False
         self.player = Player((self.columns * 2)- 1, 1)
         self.ai = Ai((self.columns * 2)- 1, 1)
         players = [self.player, self.ai]
         print(self)
         
+        exit = False
         while not exit:  
             for p in players:
+                print(f"Current player: {p}")
                 n_line, n_tile = p.game_round()
                 self.move_tiles(p, n_line, n_tile)
                 game.clear()
                 print(self)
                 exit = self.check_win(p)
-
-    def move_tiles(self, p , n_line, n_tile):
+                if exit == True:
+                    print("Congratulations, you arrived at the end of the realm of portals!")
+                    input("Press Enter to go back to the menu and try the next level")
+                    break
+                    
+    def move_tiles(self, p : "Player" , n_line, n_tile):
         
         time.sleep(1)
         self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
         p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
-        if (p.under.is_chance == True) and len(p.bag) < 3:
-            new_card = Card()
-            p.bag.append(str(new_card))
+        if p.under.is_chance:
+            p.deck.add_card(Card())
         if p.under.is_portal != True:                 # on verifie si la case sauvée dessous est un portail
             self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
         else:
@@ -181,8 +185,7 @@ class Board:
         p.pos_y = n_tile
 
     def check_win(self, p):
-        if (p.pos_x == self.exit.pos_x) and (p.pos_y == self.exit.pos_y):
-            print("Win")
+        if (p.pos_x == self.exit_point.pos_x) and (p.pos_y == self.exit_point.pos_y):
             return True
         else:
             return False
@@ -240,12 +243,51 @@ class Chance(Tile):
     def __str__(self):
         return " ♣ "    
 
+
+class Deck:
+
+    def __init__(self) -> None:
+        self.cards: list[Card]
+        self.cards = []
+
+    def play(self) -> "Card":
+        
+        if self.cards:
+            print(self)
+            card_choice = int(input("Which card do you want to play (1, 2, 3): "))
+            if card_choice == 1:
+                carte = self.cards[card_choice-1]
+            elif card_choice == 2:
+                carte = self.cards[card_choice-1]
+            elif card_choice == 3:
+                carte = self.cards[card_choice-1]
+
+            self.cards.remove(carte)
+
+            return carte
+        else:
+            print("Sac vide")
+
+    def add_card(self, card : "Card"):
+        if len(self.cards) < 3:
+            self.cards.append(card)
+        else:
+            print("The deck is already full")    
+
+    def __str__(self) -> str:
+        str_deck = ""
+        if self.cards:
+            for pos, card in enumerate(self.cards):
+                str_deck += f"{pos+1}. {card}"
+        return str_deck
+
 class Player(Tile):
 
     def __init__(self, pos_x : int, pos_y : int):
         super().__init__(pos_x, pos_y)
         self.is_player = True
-        self.bag = []
+        self.deck : Deck
+        self.deck = Deck()
         self.under = game.board.new_board[len(game.board.new_board)-2][1]
 
     def __str__(self):
@@ -257,32 +299,18 @@ class Player(Tile):
             return "☺ ☻"
 
     def game_round(self):
+        input("Press Enter to roll your dice\n")
         nb_steps = random.randint(1,6)
         print(f"The dice gives you this number of steps: {nb_steps}")
 
-        if self.bag != []:
-            print(*self.bag, sep= ",")
-            
-            if ("+1" in self.bag) and ("-1" not in self.bag):
-                play_card = input("Would you like to advance one tile more? Y/N :")
-                if play_card.lower() == "y":
-                    nb_steps += 1
-                    self.bag.remove("+1")
-            if ("+1" not in self.bag) and ("-1" in self.bag):
-                play_card = input("Would you like to advance one tile less? Y/N :")
-                if play_card.lower() == "y":
-                    nb_steps -= 1
-                    self.bag.remove("-1")
-            if ("+1" in self.bag) and ("-1" in self.bag):
-                play_card = input("Would you like to advance one tile more? Y/N :")
-                if play_card.lower() == "y":
-                    nb_steps += 1
-                    self.bag.remove("+1")
-                else:
-                    play_card = input("Would you like to advance one tile less? Y/N :")
-                    if play_card.lower() == "y":
-                        nb_steps -= 1
-                        self.bag.remove("-1")
+        card = self.deck.play()
+
+        if card is not None:
+            if card.card_value:
+                nb_steps += 1
+            else:
+                nb_steps -= 1
+        
         
         next_pos_x, next_pos_y = self.pos_x, self.pos_y    
         current_row = int((next_pos_x + 1) / 2)
@@ -331,11 +359,11 @@ class Ai(Player):
 class Card:
 
     def __init__(self):
-        self.VALUES = ["-1", "+1"]
-        self.card_value = random.sample(self.VALUES, 1)
+
+        self.card_value = random.random()
 
     def __str__(self):
-        if self.card_value == "+1":
+        if self.card_value:
             return "+1"
         else:
             return "-1"
@@ -375,6 +403,7 @@ class Startup:
                 self.clear()
 
                 if player_option == 1:
+                    self.board.new_board = []
                     self.board.generate_board()
                     self.board.gameloop()
 
@@ -418,11 +447,11 @@ class Startup:
         level_choice = int(input("Please select your difficulty level (ex: 2): "))
 
         if level_choice == 1:
-            self.board = Board(6, 6, 6, 6)
+            self.board = Board(6, 6, 6, 12)
             self.level = "Easy"
             
         elif level_choice == 2:
-            self.board = Board(8, 8, 8, 8)
+            self.board = Board(8, 8, 8, 16)
             self.level = "Moderate"
             
         elif level_choice == 3:
