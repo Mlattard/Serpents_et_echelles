@@ -168,8 +168,9 @@ class Board:
         time.sleep(1)
         self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
         p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
-        if p.under.is_chance == True:
-            p.bag.append(Card())
+        if (p.under.is_chance == True) and len(p.bag) < 3:
+            new_card = Card()
+            p.bag.append(str(new_card))
         if p.under.is_portal != True:                 # on verifie si la case sauvée dessous est un portail
             self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
         else:
@@ -237,10 +238,7 @@ class Chance(Tile):
         self.is_chance = True
         
     def __str__(self):
-        return " ♣ "
-
-    def get_card(self):
-        return Card()     
+        return " ♣ "    
 
 class Player(Tile):
 
@@ -263,22 +261,28 @@ class Player(Tile):
         print(f"The dice gives you this number of steps: {nb_steps}")
 
         if self.bag != []:
+            print(*self.bag, sep= ",")
+            
             if ("+1" in self.bag) and ("-1" not in self.bag):
                 play_card = input("Would you like to advance one tile more? Y/N :")
                 if play_card.lower() == "y":
                     nb_steps += 1
+                    self.bag.remove("+1")
             if ("+1" not in self.bag) and ("-1" in self.bag):
                 play_card = input("Would you like to advance one tile less? Y/N :")
                 if play_card.lower() == "y":
                     nb_steps -= 1
+                    self.bag.remove("-1")
             if ("+1" in self.bag) and ("-1" in self.bag):
-                play_card = input("Would you like to advance one tile less? Y/N :")
+                play_card = input("Would you like to advance one tile more? Y/N :")
                 if play_card.lower() == "y":
-                    nb_steps -= 1
+                    nb_steps += 1
+                    self.bag.remove("+1")
                 else:
                     play_card = input("Would you like to advance one tile less? Y/N :")
                     if play_card.lower() == "y":
                         nb_steps -= 1
+                        self.bag.remove("-1")
         
         next_pos_x, next_pos_y = self.pos_x, self.pos_y    
         current_row = int((next_pos_x + 1) / 2)
@@ -324,12 +328,17 @@ class Ai(Player):
         else:
             return "☺ ☻"
 
-
 class Card:
 
     def __init__(self):
-        self.VALUE = ["-1","+1"]
-        self.card_value = random.sample(self.VALUE, 1)
+        self.VALUES = ["-1", "+1"]
+        self.card_value = random.sample(self.VALUES, 1)
+
+    def __str__(self):
+        if self.card_value == "+1":
+            return "+1"
+        else:
+            return "-1"
 
 
 class Startup:
@@ -348,8 +357,9 @@ class Startup:
             description = premise_game.read()
             print(f"{description}") 
 
-        enter_the_game = input("Are you ready to enter? Y/N: ")
+        self.board = Board()
 
+        enter_the_game = input("Are you ready to enter? Y/N: ")
         if enter_the_game.lower() == "y": 
             exit = False
             while not exit:
@@ -365,7 +375,6 @@ class Startup:
                 self.clear()
 
                 if player_option == 1:
-                    self.board = Board()
                     self.board.generate_board()
                     self.board.gameloop()
 
@@ -417,7 +426,7 @@ class Startup:
             self.level = "Moderate"
             
         elif level_choice == 3:
-            self.board = Board(12, 12, 12, 12)
+            self.board = Board(12, 12, 12, 24)
             self.level = "Hard"
 
         
