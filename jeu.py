@@ -157,34 +157,40 @@ class Board:
         exit = False
         while not exit:  
             for p in players:
-                print(f"Current player: {p}")
+                print(f"Current player: {p.get_symbol()}")
                 n_line, n_tile = p.game_round()
                 self.move_tiles(p, n_line, n_tile)
                 game.clear()
                 print(self)
                 exit = self.check_win(p)
                 if exit == True:
-                    print("Congratulations, you arrived at the end of the realm of portals!")
+                    print(f"Congratulations {p.get_symbol()}, you arrived at the end of the realm of portals!")
                     input("Press Enter to go back to the menu and try the next level")
                     break
                     
     def move_tiles(self, p : "Player" , n_line, n_tile):
-        
+        self.new_board[p.pos_x][p.pos_y] = p.under          #[1] la tuile actuelle reprend la valeur de tile_under
+        p.under = self.new_board[n_line][n_tile]
         time.sleep(1)
-        if (isinstance(p.under, Player) or isinstance(p.under, Ai)):
-            p.under = p.under.under
-        self.new_board[p.pos_x][p.pos_y] = p.under    # la tuile actuelle reprend la valeur de tile_under
-        p.under = self.new_board[n_line][n_tile]      # on donne à tile_under la valeur de la prochaine case
+
+        if p.under.is_player:       
+            p.under = self.new_board[n_line][n_tile].under  #[2] on donne à tile_under la valeur du under de la prochaine case
+            self.new_board[n_line][n_tile].under = p        #[3] on donne à la prochaine tuile la valeur de la tuile actuelle comme under
+        
+        elif p.under.is_portal:                 # on verifie si la case sauvée dessous est un portail
+            p.under = self.new_board[n_line][n_tile].next
+            n_line = p.under.pos_x               # on remplace la nouvelle ligne par celle a next_x
+            n_tile = p.under.pos_y               # on remplace la nouvelle tuile par celle a next_y
+            self.new_board[n_line][n_tile] = p        # on remplace la valeur de next tile par le portail suivant
+
+        else:
+            self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
+
         if p.under.is_chance:
             p.deck.add_card(Card())
-        if p.under.is_portal != True:                 # on verifie si la case sauvée dessous est un portail
-            self.new_board[n_line][n_tile] = p        # on remplace la prochaine case par la tuile player
-        else:
-            n_line = p.under.next.pos_x               # on remplace la nouvelle ligne par celle a next_x
-            n_tile = p.under.next.pos_y               # on remplace la nouvelle tuile par celle a next_y
-            self.new_board[n_line][n_tile] = p        # on remplace la valeur de next tile par le portail suivant
+     
         p.pos_x = n_line                                # pas sur pourquoi les joueurs ne restent pas sur le portail de sortie
-        p.pos_y = n_tile
+        p.pos_y = n_tile                                # pas sur pourquoi les joueurs ne restent pas sur le portail de sortie
 
     def check_win(self, p):
         if (p.pos_x == self.exit_point.pos_x) and (p.pos_y == self.exit_point.pos_y):
@@ -256,21 +262,23 @@ class Deck:
         
         if self.cards:
             print(self)
-            card_choice = int(input("Which card do you want to play (1, 2, 3): "))
-            if card_choice == 1:
-                carte = self.cards[card_choice-1]
-            elif card_choice == 2:
-                carte = self.cards[card_choice-1]
-            elif card_choice == 3:
-                carte = self.cards[card_choice-1]
-            
+            if input("Press Y if you want to play a card or N to continue playing: ").lower() == "y":
+                card_choice = int(input("Which card do you want to play (1, 2, 3): "))
+                if card_choice <= len(self.cards):
+                    if card_choice == 1:
+                        card = self.cards[card_choice-1]
+                    elif card_choice == 2:
+                        card = self.cards[card_choice-1]
+                    elif card_choice == 3:
+                        card = self.cards[card_choice-1]
 
-
-            self.cards.remove(carte)
-
-            return carte
+                    self.cards.remove(card)
+                else:
+                    card = Card()
+                    card.card_value = 0
+                return card
         else:
-            print("Your deck is empty")
+            print("Your bag is empty")
 
     def add_card(self, card : "Card"):
         if len(self.cards) < 3:
@@ -282,7 +290,7 @@ class Deck:
         str_deck = ""
         if self.cards:
             for pos, card in enumerate(self.cards):
-                str_deck += f"{pos+1}. {card}"
+                str_deck += f"{pos+1}. {card}\n"
         return str_deck
 
 class Player(Tile):
@@ -302,6 +310,9 @@ class Player(Tile):
         else:
             return "☺ ☻"
 
+    def get_symbol(self):
+        return " ☺ "
+
     def game_round(self):
         input("Press Enter to roll your dice\n")
         nb_steps = random.randint(1,6)
@@ -310,10 +321,10 @@ class Player(Tile):
         card = self.deck.play()
 
         if card is not None:
-            if card.card_value:
-                nb_steps += 1
-            else:
+            if card.card_value == -1:
                 nb_steps -= 1
+            else:
+                nb_steps += 1
         
         
         next_pos_x, next_pos_y = self.pos_x, self.pos_y    
@@ -360,17 +371,19 @@ class Ai(Player):
         else:
             return "☺ ☻"
 
+    def get_symbol(self):
+        return " ☻ "
+
 class Card:
 
     def __init__(self):
-
-        self.card_value = random.random()
+        self.card_value = random.choice((-1, 1))
 
     def __str__(self):
-        if self.card_value:
-            return "+1"
+        if (self.card_value > 0):
+            return str("+" + str(self.card_value))
         else:
-            return "-1"
+            return str(self.card_value)
 
 
 class Startup:
